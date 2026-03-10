@@ -156,3 +156,63 @@ Previously rejected "flight delay compensation" in round 1 because claim service
 - **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (900M+ annual US passengers) | Composite: 24
 - **Status**: queued → building → SHIPPED
 - **Notes**: NOT a claim-filing service — advisory + document generation. The key insight is that the agent analyzes WHICH regulations apply based on the specific route (EU261 only for EU departure/arrival on EU carrier, APPR only for Canadian flights, etc.) which generic letter generators don't do. The regulation analysis tool contains airport mapping, extraordinary circumstances detection, and compensation calculation logic. Different from consumer-complaint-advisor because it's domain-specific with specialized legal knowledge.
+
+---
+
+## Reflection — After builds 12-16
+
+### What's working
+- **Advisory + document generation pattern** is the winning architecture for TAM 4+ ideas. Every build since #13 follows this: GATHER user's situation → ANALYZE against regulations/rules → RESEARCH current data → GENERATE personalized action plan with letters/filings. This is fundamentally different from the trust-checker pattern (builds 1-9) and reliably finds genuine gaps.
+- **Domain-specific legal knowledge** in the analysis tool is the key differentiator. Generic tools (ChatGPT, letter generators) can't match the specificity of an agent that knows FLSA exemption tests (wage-rights), EU261 distance bands (flight-rights), or CFPB complaint routing (consumer-complaint). Encoding this knowledge directly in tool logic beats relying on the LLM to know it.
+- **Revisiting rejected ideas with new angles** works. Flight rights was rejected in round 1 as "can't file claims" — revisited as advisory-only and became a strong TAM 4 build. The rejection log is a research asset, not a dead end.
+- **Build speed** is solid: 4 specialized tools + config + route + README + validate + type-check + build in ~15 minutes per agent.
+
+### What keeps failing
+- **Finding TAM 4+ ideas with genuine gap** is increasingly hard. The 2024-2025 AI tool explosion filled almost every consumer niche. Rounds 1-3 rejected 50+ ideas at GAP: 0 before finding wage-rights-advisor. The hit rate is roughly 1 in 15-20 ideas researched.
+- **TAM 5 remains elusive**. Every idea at TAM 5 (ToS analyzer, phishing detector, resume optimizer) has GAP: 0 because the enormous market attracted many competitors. TAM 4 with niche gaps is the sweet spot.
+- **research/summary.md is stale** — still says 11 shipped and threshold 18. Needs update.
+
+### Adjusted strategy
+- Focus research on **regulated domains** where encoding specific legal/regulatory knowledge creates durable gap (tax, labor, consumer protection, healthcare billing, immigration). Generic AI can't match domain-specific tools.
+- Look for **episodic high-stakes problems** where people are motivated to use a specialized tool: something just happened (flight cancelled, wage theft discovered, complaint ignored) and they need guidance NOW. These have higher engagement than ongoing/preventive tools.
+- Consider **professional niches** (real estate agents, landlords, small business owners) where TAM 3 might be acceptable if the problem is intense enough — but only if composite would still meet threshold.
+- Keep mining the rejected ideas list for new angles — what was rejected for one reason might work differently.
+
+---
+
+### Research Round 6: Hunting more TAM 4+ ideas
+
+Searched 8 problem areas across regulated domains, episodic problems, and professional niches. Hit rate improving: 3 out of 8 are buildable (37%).
+
+### Finding: Debt Collection Rights Advisor ✅ QUEUED
+- **Source**: CFPB 2025 Annual Report, NCLC debt collection data, Upsolve FDCPA guides, SoloSuit market validation
+- **Signal**: 70M+ Americans contacted by debt collectors annually (1 in 3 consumers). 1B+ collector contacts/year. CFPB received 207,800 debt collection complaints in 2024 (nearly 2x 2023). 56% of complaints allege collectors trying to collect debts not owed. 81% claim false debt amounts. 75% who requested cease-contact say collectors ignored them. SoloSuit charges $99-300 for dispute responses — proves demand.
+- **Current solutions**: Free validation letter templates exist (Rocket Lawyer, Legal Templates) but require manual FDCPA knowledge. Upsolve has educational content but no interactive analysis. State statute of limitations charts exist on InCharge.org but aren't integrated. ALL AI tools in debt collection serve COLLECTORS (Skit.ai, Floatbot, Vodex) — ZERO serve consumers. No free AI tool analyzes collector communications for violations, generates customized dispute letters, or provides integrated state-specific guidance.
+- **Agent design**: GATHER (collector details, debt info, communications received, state) → ANALYZE (identify FDCPA violations in communications, check statute of limitations, determine debt validation rights) → RESEARCH (search state-specific debt collection laws, consumer protection rules) → GENERATE (personalized dispute strategy with violation-flagged letters, cease-contact demands, statute of limitations defense, CFPB complaint filing guidance)
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (70M+ contacted by collectors annually) | Composite: 24
+- **Status**: queued → building
+- **Notes**: Fits the "episodic high-stakes" pattern perfectly — someone just got a threatening call/letter and needs guidance NOW. FDCPA rules are complex but well-defined, perfect for encoding in tool logic. All AI tools serve the collector side; consumer side is completely unserved by AI.
+
+### Finding: Immigration Form Navigator ✅ QUEUED
+- **Source**: USCIS data (10.4M forms FY2023), Docketwise green card stats, Feng Law filing mistakes analysis
+- **Signal**: 10.4M forms filed annually (52% increase over decade). 44.4% of rejections caused by outdated form versions alone. Errors cost $1,500-$3,000+ in re-filing fees plus 1-2 years delay. EB-2 NIW approval collapsed from 96% to 43%.
+- **Current solutions**: USCIS-GPT on YesChat (generic info only). ImmigrationHelp.org covers "some" forms. CitizenPath is freemium. No free AI tool systematically determines which form to file, walks through eligibility, or flags common mistakes.
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (5-7M potential users annually) | Composite: 24
+- **Status**: queued
+
+### Finding: Disability/ADA Accommodation Advisor ✅ QUEUED
+- **Source**: JAN data, ADA National Network, college disability stats
+- **Signal**: 40M+ affected (15-17M students + 27-30M workers with disabilities). 25% of workers with disabilities have unmet accommodation needs. Only 37% of disabled students disclose to college.
+- **Current solutions**: JAN (Job Accommodation Network) is phone/email only, not AI. No free interactive tool for accommodation request guidance, documentation help, or ADA rights analysis.
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (40M+ affected) | Composite: 24
+- **Status**: queued
+
+### Rejected Ideas (this round)
+
+| Idea | Reason | TAM |
+|------|--------|-----|
+| Medical billing error analyzer | GAP: 0 — OrbDoc, MedAudit, MedBill Analyzer, ClearBill, ChatGPT all free | 4 |
+| Surprise medical bill dispute | GAP: 0 — No Surprises Act (2022) solved most cases; CMS help desk exists | 2 |
+| Gig worker tax advisor | GAP: 0-1 — too close to freelancer-deduction-finder already built (#10) | 4 |
+| Inheritance/probate navigator | TAM: 1-2 — only 2.8M deaths/year, most don't need complex probate | 1 |
+| Nursing home quality advisor | TAM: 2-3 — only 1-2M annual admissions; CMS Nursing Home Compare exists | 2 |
