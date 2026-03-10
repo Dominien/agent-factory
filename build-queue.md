@@ -4,6 +4,7 @@
 1. ~~**job-scam-detector** — 6/6 — SHIPPED~~
 2. ~~**dep-changelog-summarizer** — 6/6 — SHIPPED~~
 3. ~~**repo-health-scanner** — 6/6 — SHIPPED~~
+4. ~~**company-briefing-agent** — 6/6 — SHIPPED~~
 
 ### Next Up
-4. **company-briefing-agent** — 3/3 — Generates interview prep briefings by fetching company info, news, reviews, and key people
+5. **npm-trust-checker** — 3/3 — Pre-install trust assessment for npm packages (downloads, CVEs, repo health, malicious signals)

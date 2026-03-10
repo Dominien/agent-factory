@@ -109,3 +109,63 @@ Ongoing record of problems discovered, scored, and evaluated for the agent-facto
 - **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
 - **Status**: rejected
 - **Notes**: Strong signal but gap is zero. Many mature free tools.
+
+---
+
+## Meta-Reflection — After builds 1-4
+
+### What's working
+- **GATHER → PROCESS → OUTPUT pattern is reliable.** Every agent follows the same 3-tool structure and it maps cleanly to real workflows.
+- **Web search + web fetch is powerful.** DuckDuckGo HTML search + Readability content extraction cover most information-gathering needs without API keys.
+- **Job seeker tools have high emotional appeal.** The job-scam-detector and company-briefing-agent are in the same "job seeker toolkit" and both generate README-worthy excitement. People FEEL the pain.
+- **Developer tools build fast.** The dep-changelog-summarizer and repo-health-scanner use public APIs (npm, GitHub) that are well-structured and easy to parse.
+- **Build process is smooth.** Copy seed, write 3 tools + config + route + README, type-check, build. Under 15 minutes per agent.
+
+### What keeps failing
+- **Most ideas are already well-served.** Out of 12 problems researched, only 4 had a real gap. The majority are saturated: landing page auditors, content repurposers, email spam checkers, business name generators, accessibility auditors, startup validators. Free tools are everywhere.
+- **Reddit-specific tools are risky.** GummySearch shut down because Reddit denied API access. Any agent relying on Reddit data faces the same risk.
+- **"Just LLM analysis" agents don't need the harness.** The contract reviewer idea failed because it's just text in → text out. The harness adds value when the TOOLS gather external data.
+
+### Adjusted strategy
+- **Focus on problems where data gathering is the bottleneck.** The harness excels when the agent needs to fetch from multiple web sources, cross-reference, and synthesize. Pure text analysis can be done in any chatbot.
+- **Look for "compound search" problems.** Where someone would normally open 5+ tabs to research something, that's the sweet spot. Both the company-briefing and job-scam-detector hit this.
+- **Explore B2B / developer tooling more.** The repo-health-scanner and dep-changelog-summarizer have the clearest tool utility. More developer-facing agents might score well.
+- **Consider agents that use the GitHub API specifically.** It's free, well-documented, and data-rich. More can be built on top of it.
+- **Try a different domain next.** 2 of 4 agents are job-seeker tools. Diversify into SaaS/business intelligence or developer ops.
+
+---
+
+## 2026-03-10 — Session 1 (Round 3)
+
+### Finding: npm Package Trust Checker
+- **Source**: Veracode blog, Shai-Hulud worm analysis, OWASP npm security cheat sheet, BrightCoding audit playbook, HackerNews
+- **Signal**: Malicious npm packages surged to 2,168 reports in 2024, Snyk found 3,000+ in 2024 alone. Shai-Hulud worm (Sep+Nov 2025) backdoored 796 packages with 20M weekly downloads. CISA issued an alert. Typosquatting is rampant (@acitons/artifact got 206K downloads). Supply chain security is a top developer concern.
+- **Current solutions**: npm audit (post-install only, CVEs only). npq (CLI, blocks on heuristics but requires install). Socket CLI (paid for teams). Snyk (free tier limited). OSSF Scorecard (GitHub-focused, complex). No simple "paste a package name, get a trust report" web tool.
+- **Agent design**: Tool 1 (GATHER): Fetch npm registry data (downloads, versions, maintainers, publish dates). Tool 2 (PROCESS): Search for CVEs, check GitHub repo health, look for malicious behavior reports. Tool 3 (OUTPUT): Write a trust report with score and install recommendation.
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | Total: 3/3
+- **Status**: built (venture 6/6)
+- **Notes**: Extremely timely given recent supply chain attacks. Developer-focused (diversifies from job-seeker tools). Uses both npm registry API and GitHub API — perfect for the harness.
+
+### Finding: GitHub Issue Triage Agent
+- **Source**: GitHub Agentic Workflows (Jan 2026), Dosu.dev, Probot, GitHub Docs
+- **Signal**: Maintainers report 50-100 emails daily. Issue triage is a major pain.
+- **Current solutions**: GitHub just launched AI issue triage workflow (Jan 2026). Dosu.dev automates this. Probot has a triage app. Multiple solutions emerging fast.
+- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
+- **Status**: rejected
+- **Notes**: GitHub's own AI triage launched in Jan 2026. Gap closed. Too many competitors entering.
+
+### Finding: Twitter Thread Unroller
+- **Source**: UnrollNow, ThreadReader, etc.
+- **Signal**: Common need.
+- **Current solutions**: UnrollNow, ThreadReader, PingThread, Twittethread, Xunroll — all free.
+- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
+- **Status**: rejected
+- **Notes**: Extremely well-served. 10+ free tools.
+
+### Finding: arXiv Paper Summarizer
+- **Source**: Emergent Mind, HN Show HN posts
+- **Signal**: Researchers and developers want simplified paper explanations.
+- **Current solutions**: Emergent Mind (free), semantic arXiv search tools, ChatGPT (general).
+- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
+- **Status**: deferred
+- **Notes**: Emergent Mind does this well. Could revisit with a more specific angle (e.g., "explain this paper for a product manager").

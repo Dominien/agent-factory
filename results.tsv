@@ -3,3 +3,4 @@ job-scam-detector	3	3	6	shipped	fetch-job-posting|verify-employer|generate-risk-
 dep-changelog-summarizer	3	3	6	shipped	scan-dependencies|fetch-changelogs|write-update-report	Reads package.json, fetches changelogs, summarizes breaking changes with urgency levels
 repo-health-scanner	3	3	6	shipped	fetch-repo-info|analyze-community|write-health-report	Evaluates GitHub repo health (docs, maintenance, community) and produces graded report
 company-briefing-agent	3	3	6	shipped	fetch-company-profile|research-reputation|write-briefing	Generates interview prep briefings with company overview, culture, news, talking points
+npm-trust-checker	3	3	6	shipped	check-npm-registry|assess-package-security|write-trust-report	Pre-install npm package trust assessment (CVEs, malware, repo health, typosquatting)
