@@ -21,5 +21,7 @@ Only build if projected composite (6 x TAM) >= 24. Currently requires **TAM 4**.
 
 13. ~~**wage-rights-advisor** — 6/6 — TAM 4 — Composite 24 — SHIPPED~~
 
+14. ~~**data-broker-opt-out** — 6/6 — TAM 4 — Composite 24 — SHIPPED~~
+
 ### Next Up
 (Empty — need TAM 4+ ideas to match new threshold of 24. Research more.)

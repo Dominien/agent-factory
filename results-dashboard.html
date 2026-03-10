@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Factory — Results Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    padding: 40px 48px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 36px;
+  }
+  .chart-section {
+    margin-bottom: 48px;
+  }
+  .chart-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 36px;
+  }
+  .label {
+    width: 260px;
+    min-width: 260px;
+    font-size: 13px;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .label .rank {
+    color: #444;
+    font-size: 11px;
+    width: 20px;
+    text-align: right;
+  }
+  .label .name {
+    font-weight: 500;
+  }
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-shipped {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34d399;
+  }
+  .badge-queued {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+  }
+  .bar-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+  .bar-track {
+    flex: 1;
+    height: 24px;
+    background: #141414;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+  .bar-composite {
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  }
+  .bar-composite.queued {
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    opacity: 0.45;
+  }
+  .bar-tam {
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+  }
+  .bar-tam.queued {
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    opacity: 0.45;
+  }
+  .bar-venture {
+    background: linear-gradient(90deg, #10b981, #34d399);
+  }
+  .bar-venture.queued {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    opacity: 0.45;
+  }
+  .score-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    min-width: 32px;
+    text-align: right;
+  }
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #888;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid #1a1a1a;
+    margin: 32px 0;
+  }
+  .stats {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+  }
+  .stat-value.green { color: #34d399; }
+  .stat-value.yellow { color: #fbbf24; }
+  .stat-value.purple { color: #8b5cf6; }
+  .stat-label {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .tam-breakdown {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .tam-block {
+    height: 6px;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<h1>agent-factory results</h1>
+<p class="subtitle">Sorted best to worst by composite score (venture x TAM) &mdash; auto-loaded from results.tsv</p>
+
+<div class="stats" id="stats"></div>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: linear-gradient(90deg, #6366f1, #8b5cf6);"></div>
+    Composite (venture x TAM)
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: linear-gradient(90deg, #10b981, #34d399);"></div>
+    Venture Score
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: linear-gradient(90deg, #f59e0b, #ef4444);"></div>
+    TAM (0-3)
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: rgba(52,211,153,0.15); border: 1px solid #34d399;"></div>
+    Shipped
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: rgba(251,191,36,0.15); border: 1px solid #fbbf24;"></div>
+    Queued
+  </div>
+</div>
+
+<div class="chart-section">
+  <div class="chart-title">Composite Score &mdash; venture x tam</div>
+  <div id="chart-composite"></div>
+</div>
+
+<hr class="divider">
+
+<div class="chart-section">
+  <div class="chart-title">Venture Score (max 6)</div>
+  <div id="chart-venture"></div>
+</div>
+
+<hr class="divider">
+
+<div class="chart-section">
+  <div class="chart-title">TAM &mdash; Total Addressable Market (0-3)</div>
+  <div id="chart-tam"></div>
+</div>
+
+<script>
+async function loadTSV() {
+  try {
+    const resp = await fetch('./results.tsv');
+    if (!resp.ok) throw new Error('fetch failed');
+    return await resp.text();
+  } catch {
+    // file:// fallback — prompt user
+    document.body.innerHTML = `<div style="padding:80px;text-align:center;color:#888;font-family:monospace">
+      <h2 style="color:#fff;margin-bottom:16px">Serve this directory first</h2>
+      <p>Run <code style="color:#8b5cf6">npx serve .</code> or <code style="color:#8b5cf6">python3 -m http.server</code> from the repo root, then open the URL it gives you.</p>
+      <p style="margin-top:8px;color:#555">fetch() can't read local files via file:// protocol.</p>
+    </div>`;
+    throw new Error('Cannot load results.tsv');
+  }
+}
+
+function parse(tsv) {
+  const lines = tsv.trim().split('\n');
+  const headers = lines[0].split('\t');
+  return lines.slice(1).map(line => {
+    const vals = line.split('\t');
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = vals[i]);
+    obj.venture = +obj.venture;
+    obj.tam = +obj.tam;
+    obj.research = +obj.research;
+    obj.build = +obj.build;
+    obj.composite = obj.venture * (obj.tam || 0.5); // TAM 0 gets 0.5 so it's not invisible
+    return obj;
+  });
+}
+
+loadTSV().then(tsv => {
+  const agents = parse(tsv);
+
+  agents.sort((a, b) => b.composite - a.composite || b.venture - a.venture || b.tam - a.tam);
+
+  const shipped = agents.filter(a => a.status === 'shipped').length;
+  const queued = agents.filter(a => a.status === 'queued').length;
+  const avgTam = (agents.reduce((s, a) => s + a.tam, 0) / agents.length).toFixed(1);
+  const maxComposite = Math.max(...agents.map(a => a.venture * a.tam));
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat">
+      <div class="stat-value green">${shipped}</div>
+      <div class="stat-label">Shipped</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value yellow">${queued}</div>
+      <div class="stat-label">Queued</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value purple">${maxComposite}</div>
+      <div class="stat-label">Max Composite</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">${avgTam}</div>
+      <div class="stat-label">Avg TAM</div>
+    </div>
+  `;
+
+  function renderChart(containerId, data, getValue, maxVal, barClass) {
+    const container = document.getElementById(containerId);
+    data.forEach((agent, i) => {
+      const val = getValue(agent);
+      const pct = (val / maxVal) * 100;
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `
+        <div class="label">
+          <span class="rank">${i + 1}</span>
+          <span class="name">${agent.name}</span>
+          <span class="badge badge-${agent.status}">${agent.status}</span>
+        </div>
+        <div class="bar-area">
+          <div class="bar-track">
+            <div class="bar ${barClass} ${agent.status === 'queued' ? 'queued' : ''}"
+                 style="width: ${Math.max(pct, 2)}%"></div>
+          </div>
+          <span class="score-label">${val % 1 === 0 ? val : val.toFixed(1)}</span>
+        </div>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  const byComposite = [...agents].sort((a, b) => b.composite - a.composite);
+  const maxC = Math.max(...byComposite.map(a => a.composite));
+  renderChart('chart-composite', byComposite, a => a.venture * a.tam, maxC, 'bar-composite');
+
+  const byVenture = [...agents].sort((a, b) => b.venture - a.venture || b.tam - a.tam);
+  renderChart('chart-venture', byVenture, a => a.venture, 6, 'bar-venture');
+
+  const byTam = [...agents].sort((a, b) => b.tam - a.tam || b.venture - a.venture);
+  renderChart('chart-tam', byTam, a => a.tam, 3, 'bar-tam');
+}).catch(() => {});
+</script>
+</body>
+</html>

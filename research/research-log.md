@@ -98,3 +98,16 @@ Key finding: Every consumer-facing "research and report" niche with TAM 4+ has G
 | Subscription value analyzer | GAP: partial — trackers exist (Rocket Money) but value analysis is subjective | 4 |
 | Neighbor noise complaint advisor | Too niche, mainly legal advice articles | 2 |
 | Elder care facility comparison | GAP: partial — Contour Care free AI search + A Place for Mom | 3 |
+| Independent contractor misclassification | Too close to wage-rights-advisor already built | 3 |
+| Apartment hunting comparison | GAP: 0 — Zillow, Apartments.com, Rent.com dominate | 4 |
+| Drug interaction checker | GAP: 0 — Medscape (free), DrugBank, SUPP.AI, PatientNotes.ai | 4 |
+| Scholarship finder/matcher | GAP: 0 — ScholarshipOwl, Fastweb, Orbit, multiple free AI tools | 3 |
+
+### Finding: Data Broker Opt-Out Advisor ✅ QUEUED
+- **Source**: Privacy Rights Clearinghouse, Incogni research, California DROP, Security.org study
+- **Signal**: 2,500-4,000 data brokers in US. Profiles exist on 250M+ Americans with thousands of data points each. Only 6% of adults have used data removal services. Only 37% know what a data broker is. Would take 304+ hours to manually opt out. $21B in damage from leaked data.
+- **Current solutions**: DeleteMe/Incogni are PAID ($8+/month). Optery has free scan but charges for removal. Blog guides exist (Incogni, DeleteMe, CyberNews) but are generic lists, not personalized. California DROP is CA-only. GitHub Big-Ass-Data-Broker-Opt-Out-List is static. No free AI tool generates personalized removal plans.
+- **Agent design**: GATHER (user's name, state, data concerns) → SEARCH (research top data brokers + their opt-out processes) → ANALYZE (assess which brokers likely have user data based on profile) → GENERATE (personalized step-by-step removal plan with direct links, instructions per broker, priority ranking, time estimates)
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (250M+ Americans with data on brokers) | Composite: 24
+- **Status**: queued → building → SHIPPED
+- **Notes**: NOT a trust-checker — privacy protection + document generation agent. Different from personal data exposure scanner (which FINDS data) because this GENERATES a removal action plan. Existing paid services ($8+/month) prove demand. Agent empowers users to do it themselves for free.

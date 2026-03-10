@@ -2,14 +2,14 @@
 
 An autonomous agent that researches real problems, then builds specialized open-source agents to solve them. Inspired by Karpathy's autoresearch — same loop pattern, different domain.
 
-Instead of optimizing val_bpb on a training script, this agent discovers pain points from the wild, designs 2-3 tool agent architectures on top of a minimal harness, validates them, and ships them as standalone GitHub repos.
+Instead of optimizing val_bpb on a training script, this agent discovers pain points from the wild, designs multi-tool agent architectures on top of a minimal harness, validates them, and ships them as standalone GitHub repos.
 
 ## Setup
 
 1. **Clone this repo** and confirm the seed harness exists in `seed/`.
 2. **Check credentials**: `cat .env | grep -v "^#" | grep -v "^$"` — these are your available API capabilities. Design around what exists. If a key is missing, work without it or skip problems that need it.
 3. **Read the seed harness**: Read `seed/README.md` fully. This is your base. Every agent you build is a fork of this harness with specialized tools, system prompt, and README.
-4. **Read your history**: Check `research/research-log.md` and `results.tsv` for what you've already learned and tried. Don't repeat yourself.
+4. **Read your history**: Check `research/summary.md` and `results.tsv` for what you've already learned and tried. Don't repeat yourself.
 5. **Create a branch**: `git checkout -b session/<date>` for this session.
 6. **Begin the loop.**
 
@@ -19,7 +19,7 @@ You have two phases that interleave. Research feeds the build queue. Building pr
 
 ### Phase 1 — Research
 
-You are a researcher first. Your job is to find real problems that real people actually have, that can be solved by a small autonomous agent with 2-3 tools.
+You are a researcher first. Your job is to find real problems that real people actually have, that can be solved by a small autonomous agent with the right set of tools.
 
 **Where to look:**
 - Reddit: r/selfhosted, r/opensource, r/webdev, r/sysadmin, r/devops, r/smallbusiness, r/entrepreneur, r/SaaS, r/programming, r/node
@@ -37,7 +37,7 @@ The seed harness has 3 Composio meta-tools (`composio_search_tools`, `composio_e
 - The current solutions are either expensive, complex, or don't exist (gap)
 - It can be solved with public data + API calls + LLM processing (feasibility)
 - The input/output contract is clear (testability)
-- 2-3 tools can form a complete workflow (scope)
+- A clear tool chain can form a complete workflow (scope)
 
 **What makes a BAD problem:**
 - Requires user-specific OAuth (Gmail, Slack, Google Drive) unless you have keys for it
@@ -45,20 +45,79 @@ The seed harness has 3 Composio meta-tools (`composio_search_tools`, `composio_e
 - Too vague to define a test case ("make my business better")
 - Already solved well by a popular free tool
 - Requires a database or persistent state beyond files
+- **Another trust-checker / scam-detector / verification agent.** We have
+  enough of these (7 of 9 shipped). The pattern works but the portfolio
+  is lopsided. Skip any idea that boils down to "search for entity X,
+  cross-reference reviews/complaints, produce trust report." Look for
+  genuinely different agent architectures: data transformation, monitoring,
+  generation, analysis, automation — not just verification.
+
+**Diversity rule**: No more than 2 agents in the same problem category. If
+you've already built 2 scam detectors, that category is closed. Move on to
+a completely different domain. Check results.tsv before building — if a
+similar agent exists, find something new.
+
+**Problem Score** (before building — all automatable):
+- DEMAND = count of Reddit/HN posts mentioning this pain point
+- GAP = count of existing free solutions (inverse: fewer = higher)
+- TOOLS = count of Composio tools available for the solution
+- TAM = Total Addressable Market size (log scale, no cap):
+    0 = niche (<100k potential users)
+    1 = moderate (100k–1M)
+    2 = large (1M–10M)
+    3 = massive (10M–100M)
+    4 = enormous (100M–1B)
+    5 = universal (1B+)
+  Estimate with one web search: "how many people [do the thing] per year"
+  Be precise — 72M freelancers is TAM 3, 330M phone users is TAM 4.
+
+- Formula: DEMAND × (1/GAP) × TOOLS × TAM
+
+Prioritize the highest TAM you can find. TAM 3 is the current floor,
+not the ceiling. Actively hunt for TAM 4 (100M-1B) and TAM 5 (1B+)
+problems. Think globally — not just US markets. A problem affecting
+every internet user, every smartphone owner, every email recipient
+is TAM 5. Don't settle for TAM 3 when TAM 4+ exists.
+
+**Why TAM matters beyond prioritization:** Estimating TAM forces you to do
+customer discovery. To score TAM you must search for data like "how many
+people search for apartments per year" — this is exactly the market
+validation a human founder would do. You're not just filtering, you're
+validating that real demand exists at scale. If you can't find data to
+support TAM 2+, the market probably isn't there. Treat the TAM search
+as a signal, not just a score.
+
+**Composite Score** = Venture Score x TAM
+
+For unbuilt ideas, use projected Venture Score (assume 6/6 if research = 3/3).
+
+**Threshold rule**: Before adding an idea to the build queue, check
+`results.tsv` for the current highest Composite Score among shipped agents.
+If the new idea's projected Composite Score does NOT exceed that
+threshold, skip it and research the next idea. Do not build it.
+
+The threshold is a FLOOR, not a target. Don't stop at ideas that merely
+meet it — actively seek ideas that BEAT it. A TAM 4 idea (100M-1B users)
+scores composite 24 and raises the bar for everything after it. A TAM 5
+idea (1B+ users) scores 30. Push higher. If all your ideas score the
+same composite as the current best, you're not searching broadly enough.
+
+To compute threshold: scan `venture` and `tam` columns of results.tsv,
+compute venture x tam for each shipped row, take the max.
 
 **Venture Score** — simple checklist, 1 point each:
 
 Research (score before building):
 - [ ] SIGNAL: Found 3+ people asking for this or complaining about it
 - [ ] GAP: No good free tool solves this today
-- [ ] FEASIBLE: Can be built with 2-3 tools on the seed harness
+- [ ] FEASIBLE: Can be built with tools on the seed harness
 
 Build (score after building):
 - [ ] BOOTS: `npm install && npm run dev` succeeds without errors
 - [ ] WORKS: A test prompt returns a useful response
 - [ ] README: Clear README explaining what, why, and how to use
 
-**Max: 6. Build if research score = 3/3. Ship if total >= 5.**
+**Max: 6. Build if research score = 3/3 AND projected composite >= threshold. Ship if total >= 5.**
 
 Log in results.tsv. Sort by Venture Score. This is your val_bpb.
 
@@ -68,28 +127,32 @@ Log everything in `research/research-log.md`.
 
 ### Phase 2 — Build
 
-When your build queue has a problem scoring 3/3 on research, build it.
+When your build queue has a problem scoring 3/3 on research AND whose
+projected Composite Score (6 x TAM) meets or exceeds the current threshold
+from results.tsv, build it. If no queued item meets the threshold, skip
+building and return to Phase 1 to research more ideas. Focus on finding
+TAM 3 problems.
 
-**The agent architecture — ALWAYS 2-3 tools:**
+**The agent architecture — as many tools as the problem needs:**
 
-Every agent you build follows the same pattern:
+Every agent you build follows the GATHER → PROCESS → OUTPUT pattern. Use as many tools as needed to solve the problem well — there is no hard cap. More tools = more thorough agents.
 
 ```
-Tool 1: GATHER  → Get raw input from the world
-                   (search, fetch, read file, call API)
-Tool 2: PROCESS → Transform, analyze, or enrich
-                   (parse, extract, score, classify, compare)
-Tool 3: OUTPUT  → Deliver the result
-                   (write file, format report, send notification)
+GATHER tools  → Get raw input from the world
+                 (search, fetch, read file, call API)
+PROCESS tools → Transform, analyze, or enrich
+                 (parse, extract, score, classify, compare)
+OUTPUT tools  → Deliver the result
+                 (write file, format report, send notification)
 ```
 
-Sometimes tool 2 and 3 merge. That's fine — 2 tools is the minimum, 3 is the max. Never 1, never 4+.
+Each tool should do ONE thing well. If a tool is doing too much, split it. If you can delete a tool and the agent still works, delete it. But don't artificially limit yourself — if the problem needs 5 tools, build 5 tools.
 
 **Build steps:**
 
 1. Create a new directory: `builds/<agent-name>/`
 2. Copy the seed harness: `cp -r seed/* builds/<agent-name>/`
-3. Write the specialized tools in `lib/tools/` (2-3 files)
+3. Write the specialized tools in `lib/tools/`
 4. Write the system prompt in `config.ts`
 5. Write a clear README.md explaining what this agent does, who it's for, and how to use it
 6. Register tools in `app/api/chat/route.ts`
@@ -111,15 +174,23 @@ LOOP FOREVER:
 
 ```
 1. Read .env — know your available APIs
-2. Read research/research-log.md — know what you've learned
+2. Read research/summary.md — know what you've learned
 3. Read results.tsv — know what you've built and what failed
 4. RESEARCH: spend time discovering 3-5 new problems
    - Search Reddit, HN, GitHub, Twitter
    - Score each problem (SIGNAL + GAP + FEASIBLE, each 0/1)
+   - Estimate TAM (0-3) with one web search
    - Log everything in research-log.md
-   - Add high-scorers to build-queue.md
+   - Compute threshold: max(venture x tam) from shipped rows in results.tsv
+   - Only add to build-queue if projected composite (6 x TAM) >= threshold
+   - If below threshold, log as "rejected (below threshold)" and move on
 5. BUILD: pick the top problem from build-queue
-   - Design the 2-3 tool chain
+   - **Research time box**: Max 2 research rounds before you MUST build
+     the top queued item. If your queue has a 3/3 item that meets
+     threshold, build it. Don't validate it a third time. Don't find
+     one more idea first. BUILD.
+   - If build-queue is empty (all below threshold), GOTO 4 — research more
+   - Design the tool chain
    - Build it on the seed harness
    - Validate
    - Ship or discard
@@ -140,7 +211,26 @@ Your context window is finite. Treat it like working memory — keep it focused.
 - **Summarize before moving on.** After a research deep-dive or build attempt, write a short summary of key findings and next steps into a file. Then you can refer back to it later without re-reading everything.
 - **Use files as external memory.** Before your context fills up, dump structured notes (scored problems, design sketches, partial results) to disk. Files persist; context doesn't.
 - **Batch tool calls.** When you need multiple searches (e.g. Reddit + GitHub + Google on the same topic), issue them together rather than one at a time. This saves round-trips and context space.
-- **Reset via logs.** If you lose track of where you are, re-read `research/research-log.md`, `results.tsv`, and `build-queue.md`. These are your source of truth, not your memory of what you did three hours ago.
+- **Reset via logs.** If you lose track of where you are, re-read `research/summary.md`, `results.tsv`, and `build-queue.md`. These are your source of truth. Only read archive files if you need details on a specific past finding.
+
+### Managing the Research Log
+
+The research log grows fast. Keep it manageable:
+
+**During a session:**
+- Log findings in full format in `research/research-log.md`
+
+**At session end (before handoff or context limit):**
+1. Archive: move `research/research-log.md` contents to `research/archive/session-<date>.md`
+2. Update `research/summary.md`: add new shipped agents, add rejects as one-liners, update stats and threshold
+3. Reset `research/research-log.md` to fresh header only
+
+**At session start:**
+- Read `research/summary.md` (not archive files) for history
+- Read `results.tsv` for standings, `build-queue.md` for queue
+- Only read archive files if revisiting a specific past finding
+
+**Target:** `research-log.md` under 200 lines. `summary.md` under 150 lines.
 
 **NEVER STOP.** Do not ask the human if you should continue. Do not ask for permission. Do not say "should I keep going?" The human may be asleep. They expect you to work indefinitely. If you run out of ideas, re-read your research log, look for patterns you missed, try combining ideas, explore new subreddits, check what's trending on GitHub today. The loop runs until the human interrupts you.
 
@@ -157,8 +247,8 @@ Your context window is finite. Treat it like working memory — keep it focused.
 - **Source**: [URL or description]
 - **Signal**: [upvotes, frequency, quotes from real users]  
 - **Current solutions**: [what exists, why it's insufficient]
-- **Agent design**: [2-3 tool sketch if obvious]
-- **Score**: SIGNAL: 0/1 | GAP: 0/1 | FEASIBLE: 0/1 | Total: X/3
+- **Agent design**: [tool chain sketch if obvious]
+- **Score**: DEMAND: X | GAP: X | TOOLS: X | TAM: X (reason) | Problem Score: XX
 - **Status**: queued / built / deferred / rejected
 - **Notes**: [anything relevant]
 ```
@@ -166,9 +256,9 @@ Your context window is finite. Treat it like working memory — keep it focused.
 ### results.tsv
 
 ```
-name	research	build	venture	status	tools	description
-seo-audit-agent	3	3	6	shipped	site-crawl|seo-analyze|report-write	Audits basic on-page SEO from any URL
-dep-scanner	2	1	3	failed	repo-read|vuln-check	CVE scanning - already well solved by Snyk/npm audit
+name	research	build	venture	status	tam	tools	description
+seo-audit-agent	3	3	6	shipped	2	site-crawl|seo-analyze|report-write	Audits basic on-page SEO from any URL
+dep-scanner	2	1	3	failed	0	repo-read|vuln-check	CVE scanning - already well solved by Snyk/npm audit
 ```
 
 ### build-queue.md
@@ -198,11 +288,11 @@ dep-scanner	2	1	3	failed	repo-read|vuln-check	CVE scanning - already well solved
 ## Constraints
 
 - **Local-first**: No databases. No hosted state. Files on disk, git for persistence. The seed harness is stateless and so are your agents.
-- **2-3 tools per agent**: No more. If you need 4+, the problem is too broad. Split it.
+- **Right-size the tool chain**: Use as many tools as the problem genuinely needs. Each tool should do one thing well. Don't pad, but don't artificially constrain either.
 - **Seed harness is read-only**: Don't modify `seed/`. Copy it and specialize the copy.
 - **No new dependencies beyond what's in the harness**: `npm install` should work with the existing `package.json`. If you need a package, it must be importable via the existing setup or be a pure JS/TS implementation.
 - **Each agent must be self-contained**: Clone it, add your .env, `npm install && npm run dev`. That's it. No external setup steps.
-- **Simplicity criterion**: Borrowed from Karpathy — all else being equal, simpler is better. A clever 2-tool agent beats a complex 3-tool agent if they solve the same problem equally well. If you can delete a tool and the agent still works, delete it.
+- **Simplicity criterion**: Borrowed from Karpathy — all else being equal, simpler is better. If you can delete a tool and the agent still works, delete it. But don't sacrifice thoroughness for minimalism.
 - **Ship imperfect**: A working agent with rough edges beats a perfect agent that never ships. Get it out, document the limitations in the README, move on.
 
 ## What Success Looks Like
@@ -217,8 +307,9 @@ After an overnight session (~8 hours), you should have:
 
 **How the human reviews your work:**
 1. `cat results.tsv` — see all ideas and builds at a glance
-2. `cat research/research-log.md` — read the full research
+2. `cat research/summary.md` — read the cumulative research summary
 3. `ls builds/` — browse every built agent
 4. `git log --oneline` — see the session history
+5. `open results-dashboard.html` — visual chart of scores
 
 Everything must be on disk and committed. Don't leave work only in your context.
