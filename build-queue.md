@@ -1,5 +1,9 @@
 ## Build Queue (sorted by score)
 
-1. **job-scam-detector** — 3/3 — AI agent that analyzes job postings for scam red flags, verifies companies, and produces risk reports
-2. **dep-changelog-summarizer** — 3/3 — Reads your package.json, fetches changelogs, summarizes breaking changes and urgency
-3. **repo-health-scanner** — 3/3 — Scans any GitHub repo and produces a health report (docs, activity, community, maintenance)
+### Built
+1. ~~**job-scam-detector** — 6/6 — SHIPPED~~
+2. ~~**dep-changelog-summarizer** — 6/6 — SHIPPED~~
+3. ~~**repo-health-scanner** — 6/6 — SHIPPED~~
+
+### Next Up
+4. **company-briefing-agent** — 3/3 — Generates interview prep briefings by fetching company info, news, reviews, and key people

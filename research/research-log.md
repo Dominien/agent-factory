@@ -64,3 +64,48 @@ Ongoing record of problems discovered, scored, and evaluated for the agent-facto
 - **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
 - **Status**: rejected
 - **Notes**: Doesn't leverage tools — just LLM text analysis. Base harness already does this.
+
+---
+
+## 2026-03-10 — Session 1 (Round 2)
+
+### Finding: Company Briefing Generator (Interview Prep)
+- **Source**: Reddit (r/jobs, r/cscareerquestions), The Interview Guys, Ohio State career services, Scale.jobs
+- **Signal**: Every job seeker needs to research companies before interviews. Multiple guides (OSU, InterviewGuys) confirm this is standard advice. Reddit career communities constantly discuss this. People manually check 5-6 sources (website, Glassdoor, Crunchbase, news, LinkedIn, funding).
+- **Current solutions**: Manual research (tedious, 15-20 min per company). No automated "one-click company briefing" tool exists. Glassdoor gives reviews but not a complete briefing. Crunchbase gives funding but requires account.
+- **Agent design**: Tool 1 (GATHER): web_fetch company website + careers page. Tool 2 (PROCESS): web_search for Glassdoor reviews, recent news, funding, key people, culture. Tool 3 (OUTPUT): file_write one-page briefing with talking points.
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | Total: 3/3
+- **Status**: built (venture 6/6)
+- **Notes**: Great companion to job-scam-detector. Same audience (job seekers). Extremely practical — saves 15-20 min of manual research per interview. Output is immediately usable.
+
+### Finding: Startup Idea Validator
+- **Source**: ValidatorAI, IdeaProof, FounderPal, DimeADozen, Reddit indie hacker communities
+- **Signal**: Very high demand from indie hackers and entrepreneurs.
+- **Current solutions**: ValidatorAI (free), IdeaProof (free), FounderPal (free), DimeADozen (free). Market is saturated with free tools.
+- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
+- **Status**: rejected
+- **Notes**: At least 5 free tools already do this well. No differentiation possible.
+
+### Finding: Brand Mention Monitor
+- **Source**: Reddit, Gumloop blog, marketing communities
+- **Signal**: Small businesses want to track brand mentions.
+- **Current solutions**: Google Alerts (free), Octolens, Alertly, Awario, BrandMentions. Well-served market.
+- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
+- **Status**: rejected
+- **Notes**: Google Alerts is free and sufficient for most use cases.
+
+### Finding: Email Deliverability Checker
+- **Source**: Various spam check tool websites
+- **Signal**: Email marketers care about deliverability.
+- **Current solutions**: mail-tester.com, MailGenius, TestMailScore, IPQS, Unspam.email — all free.
+- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
+- **Status**: rejected
+- **Notes**: Extremely well-served. 10+ free tools exist.
+
+### Finding: Accessibility Audit Agent
+- **Source**: W3C, AccessibilityChecker.org, WCAG compliance guides
+- **Signal**: High regulatory pressure (European Accessibility Act June 2025, US gov April 2026).
+- **Current solutions**: AccessibilityChecker.org, WAVE, axe, accessScan — many free tools.
+- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | Total: 2/3
+- **Status**: rejected
+- **Notes**: Strong signal but gap is zero. Many mature free tools.
