@@ -8,3 +8,7 @@ repo-health-scanner	3	3	6	shipped	1	fetch-repo-info|analyze-community|write-heal
 npm-trust-checker	3	3	6	shipped	1	check-npm-registry|assess-package-security|write-trust-report	Pre-install npm package trust assessment (CVEs, malware, repo health, typosquatting)
 haunted-domain-checker	3	3	6	shipped	0	fetch-domain-info|check-domain-reputation|write-domain-report	Pre-purchase domain reputation audit (RDAP, Wayback, blacklists, malware, email rep)
 bootcamp-evaluator	3	3	6	shipped	1	search-bootcamp|evaluate-bootcamp|write-evaluation-report	Pre-enrollment bootcamp/course evaluation (reviews, outcomes, complaints, accreditation)
+daycare-trust-checker	3	0	3	queued	2	search-daycare|verify-daycare|write-daycare-report	Pre-enrollment daycare/childcare due diligence (license, inspections, violations, reviews, complaints)
+wedding-vendor-checker	3	0	3	queued	2	search-vendor|verify-vendor|write-vendor-report	Pre-booking wedding vendor trust check (reviews across platforms, BBB, business verification, scam reports)
+auto-shop-trust-checker	3	0	3	queued	2	search-shop|verify-shop|write-shop-report	Pre-service auto repair shop vetting (ASE certification, BBB, reviews, complaints, pricing fairness)
+property-tax-appeal-researcher	3	0	3	queued	2	gather-property-data|analyze-comparables|write-appeal-report	Property tax appeal research (comparable sales, assessment ratios, overvaluation analysis, filing guide)

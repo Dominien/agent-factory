@@ -369,6 +369,15 @@ Every successful agent passes the same test: "Would a person open 5+ browser tab
 - **Status**: rejected
 - **Notes**: FDA database covers safety alerts. Drug interaction checks have medical liability concerns.
 
+### Finding: Bootcamp / Online Course Evaluator
+- **Source**: Course Report, SwitchUp, Reddit (r/learnprogramming, r/cscareerquestions), Career Karma
+- **Signal**: Bootcamp market is $1B+. Students investing $10-20k need due diligence. Reddit is full of "is X bootcamp worth it?" posts. CIRR outcomes reporting is voluntary and inconsistent. Scam bootcamps with fake placement stats are a real problem.
+- **Current solutions**: Course Report (reviews, basic stats). SwitchUp (reviews). Career Karma (reviews + coaching, conflicts of interest — they earn referral fees). Reddit (anecdotal). No free tool that consolidates: CIRR outcomes + multi-platform reviews + BBB/complaints + pricing comparison + accreditation status into one report.
+- **Agent design**: Tool 1 (GATHER): Search for bootcamp across web, Course Report, SwitchUp, Reddit. Tool 2 (PROCESS): Deep verification — CIRR audit data, job placement claims, complaints, BBB/regulatory, accreditation, instructor credentials, curriculum quality, pricing vs alternatives. Tool 3 (OUTPUT): Scored evaluation report with enroll/skip recommendation.
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 1 (~200-500k bootcamp applicants per year) | Total: 3/3
+- **Status**: built (venture 6/6)
+- **Notes**: Education consumer protection. Extends "trust checker" archetype to education. BUILD: TypeScript clean, Next.js build passes. 3 tools: search_bootcamp (5 searches), evaluate_bootcamp (8+ deep searches), write_evaluation_report (scored 1-10 with recommendation).
+
 ---
 
 ## 2026-03-10 — Session 3 (Round 6)
