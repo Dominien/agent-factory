@@ -1,451 +1,243 @@
 # Research Log
 
-Ongoing record of problems discovered, scored, and evaluated for the agent-factory pipeline.
+See `research/summary.md` for cumulative history.
+See `research/archive/` for full session logs.
 
 ---
 
-## 2026-03-10 — Session 1
+## 2026-03-10 — Session 4 (Round 7)
 
-### Finding: Job Posting Scam Detector
-- **Source**: Reddit (r/jobs, r/scams), FlexJobs survey, Indeed career advice, Hacker News
-- **Signal**: 4 in 10 Americans received job scam texts in 2025 (Resume.org survey). LinkedIn job scams surging in 2026. AI-generated fake postings increasingly sophisticated. Constant complaints on Reddit about fake listings.
-- **Current solutions**: Norton Genie (generic scam detector, not job-specific). Resumly AI (paid). Manual checklist articles. No free, focused, AI-powered job posting analyzer.
-- **Agent design**: Tool 1 (GATHER): web_fetch to grab job posting page. Tool 2 (PROCESS): web_search to verify company existence, check domain, find reviews. Tool 3 (OUTPUT): file_write risk report with specific red flags.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 3 (~6M active job seekers/month in US alone, global scale) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Broad audience. Emotional appeal. Very testable — paste a URL, get a risk score. Red flags: vague descriptions, unrealistic salary, grammar issues, missing company info, generic email domains, payment requests. BUILD: TypeScript clean, Next.js build passes. 3 specialized tools: fetch_job_posting, verify_employer, generate_risk_report.
-
-### Finding: Dependency Changelog Summarizer
-- **Source**: DEV Community, npm/Renovate docs, HN developer tool wishes
-- **Signal**: "Updating packages leads to questioning career choices at 2 AM." Developers miss breaking changes constantly. Dependabot/Renovate create PRs but don't summarize what changed.
-- **Current solutions**: Dependabot (creates PRs, no summaries). Renovate Bot (same). Manual changelog reading. GitHub releases page (per-repo visits).
-- **Agent design**: Tool 1 (GATHER): file_read package.json, web_fetch GitHub release notes. Tool 2 (PROCESS): Summarize changelogs, highlight breaking changes, rate urgency. Tool 3 (OUTPUT): file_write structured update report.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 1 (~500k devs with complex dependency trees) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Clear gap vs existing tools. Dependabot tells you WHAT to update, not WHY or what breaks. Works with any package manager. BUILD: TypeScript clean, Next.js build passes. 3 tools: scan_dependencies, fetch_changelogs, write_update_report.
-
-### Finding: GitHub Repo Health Scanner
-- **Source**: GitHub topics (readme-score), NxCode tool, HN discussions
-- **Signal**: Developers evaluate repos before adopting. Common: Is it maintained? Good docs? Active community? Responsive to issues?
-- **Current solutions**: NxCode web tool (limited). GitHub Code Quality (preview, own repos only). readme-score (outdated). Manual evaluation (slow).
-- **Agent design**: Tool 1 (GATHER): web_fetch GitHub repo page + API. Tool 2 (PROCESS): Score health (README, commits, issues, stars, license, CI). Tool 3 (OUTPUT): file_write health report.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 1 (~200-500k devs regularly evaluating OSS) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Useful for any developer evaluating dependencies. Also for maintainers improving their repos. BUILD: TypeScript clean, Next.js build passes. 3 tools: fetch_repo_info, analyze_community, write_health_report.
-
-### Finding: Landing Page Copy Auditor
-- **Source**: Reddit (r/webdev, r/entrepreneur), HN, indie hacker communities
-- **Signal**: Common pain — people want landing page feedback.
-- **Current solutions**: Roastd.io (free). NxCode (free tier). Multiple free options emerging.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~millions of website owners) | Total: 2/3
-- **Status**: deferred
-- **Notes**: Gap closing fast. Roastd.io already does this well for free.
-
-### Finding: Content Repurposer (Blog to Social)
-- **Source**: Reddit marketing communities, Sprout Social
-- **Signal**: 94% of marketers repurpose content.
-- **Current solutions**: Planable (free, unlimited). Repurpose.io. Many free options.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~millions of content marketers) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Market saturated. Planable offers this free and unlimited.
-
-### Finding: TOS/Privacy Policy Change Monitor
-- **Source**: VentureBeat, TechCrunch, general web
-- **Signal**: People care when TOS changes but specific tool request is niche.
-- **Current solutions**: Visualping (general). TOSBack (shut down). No focused free tracker.
-- **Score**: SIGNAL: 0 | GAP: 1 | FEASIBLE: 1 | TAM: 1 (~100-500k privacy-conscious users) | Total: 2/3
-- **Status**: deferred
-- **Notes**: Gap exists but signal is weak.
-
-### Finding: Freelance Contract Red Flag Reviewer
-- **Source**: HN, Reddit freelancer communities
-- **Signal**: Freelancers worry about contracts. Commercial tools expensive.
-- **Current solutions**: Spellbook, Ironclad, goHeather (all expensive/enterprise).
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 1 (~500k-1M active freelancers) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Doesn't leverage tools — just LLM text analysis. Base harness already does this.
-
----
-
-## 2026-03-10 — Session 1 (Round 2)
-
-### Finding: Company Briefing Generator (Interview Prep)
-- **Source**: Reddit (r/jobs, r/cscareerquestions), The Interview Guys, Ohio State career services, Scale.jobs
-- **Signal**: Every job seeker needs to research companies before interviews. Multiple guides (OSU, InterviewGuys) confirm this is standard advice. Reddit career communities constantly discuss this. People manually check 5-6 sources (website, Glassdoor, Crunchbase, news, LinkedIn, funding).
-- **Current solutions**: Manual research (tedious, 15-20 min per company). No automated "one-click company briefing" tool exists. Glassdoor gives reviews but not a complete briefing. Crunchbase gives funding but requires account.
-- **Agent design**: Tool 1 (GATHER): web_fetch company website + careers page. Tool 2 (PROCESS): web_search for Glassdoor reviews, recent news, funding, key people, culture. Tool 3 (OUTPUT): file_write one-page briefing with talking points.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 2 (~1-3M job seekers who actively prep for interviews) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Great companion to job-scam-detector. Same audience (job seekers). Extremely practical — saves 15-20 min of manual research per interview. Output is immediately usable.
-
-### Finding: Startup Idea Validator
-- **Source**: ValidatorAI, IdeaProof, FounderPal, DimeADozen, Reddit indie hacker communities
-- **Signal**: Very high demand from indie hackers and entrepreneurs.
-- **Current solutions**: ValidatorAI (free), IdeaProof (free), FounderPal (free), DimeADozen (free). Market is saturated with free tools.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 1 (~500k aspiring entrepreneurs) | Total: 2/3
-- **Status**: rejected
-- **Notes**: At least 5 free tools already do this well. No differentiation possible.
-
-### Finding: Brand Mention Monitor
-- **Source**: Reddit, Gumloop blog, marketing communities
-- **Signal**: Small businesses want to track brand mentions.
-- **Current solutions**: Google Alerts (free), Octolens, Alertly, Awario, BrandMentions. Well-served market.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~1-5M small businesses) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Google Alerts is free and sufficient for most use cases.
-
-### Finding: Email Deliverability Checker
-- **Source**: Various spam check tool websites
-- **Signal**: Email marketers care about deliverability.
-- **Current solutions**: mail-tester.com, MailGenius, TestMailScore, IPQS, Unspam.email — all free.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 1 (~500k email marketers) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Extremely well-served. 10+ free tools exist.
-
-### Finding: Accessibility Audit Agent
-- **Source**: W3C, AccessibilityChecker.org, WCAG compliance guides
-- **Signal**: High regulatory pressure (European Accessibility Act June 2025, US gov April 2026).
-- **Current solutions**: AccessibilityChecker.org, WAVE, axe, accessScan — many free tools.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~1-5M web developers) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Strong signal but gap is zero. Many mature free tools.
-
----
-
-## Meta-Reflection — After builds 1-4
-
-### What's working
-- **GATHER → PROCESS → OUTPUT pattern is reliable.** Every agent follows the same 3-tool structure and it maps cleanly to real workflows.
-- **Web search + web fetch is powerful.** DuckDuckGo HTML search + Readability content extraction cover most information-gathering needs without API keys.
-- **Job seeker tools have high emotional appeal.** The job-scam-detector and company-briefing-agent are in the same "job seeker toolkit" and both generate README-worthy excitement. People FEEL the pain.
-- **Developer tools build fast.** The dep-changelog-summarizer and repo-health-scanner use public APIs (npm, GitHub) that are well-structured and easy to parse.
-- **Build process is smooth.** Copy seed, write 3 tools + config + route + README, type-check, build. Under 15 minutes per agent.
-
-### What keeps failing
-- **Most ideas are already well-served.** Out of 12 problems researched, only 4 had a real gap. The majority are saturated: landing page auditors, content repurposers, email spam checkers, business name generators, accessibility auditors, startup validators. Free tools are everywhere.
-- **Reddit-specific tools are risky.** GummySearch shut down because Reddit denied API access. Any agent relying on Reddit data faces the same risk.
-- **"Just LLM analysis" agents don't need the harness.** The contract reviewer idea failed because it's just text in → text out. The harness adds value when the TOOLS gather external data.
-
-### Adjusted strategy
-- **Focus on problems where data gathering is the bottleneck.** The harness excels when the agent needs to fetch from multiple web sources, cross-reference, and synthesize. Pure text analysis can be done in any chatbot.
-- **Look for "compound search" problems.** Where someone would normally open 5+ tabs to research something, that's the sweet spot. Both the company-briefing and job-scam-detector hit this.
-- **Explore B2B / developer tooling more.** The repo-health-scanner and dep-changelog-summarizer have the clearest tool utility. More developer-facing agents might score well.
-- **Consider agents that use the GitHub API specifically.** It's free, well-documented, and data-rich. More can be built on top of it.
-- **Try a different domain next.** 2 of 4 agents are job-seeker tools. Diversify into SaaS/business intelligence or developer ops.
-
----
-
-## 2026-03-10 — Session 1 (Round 3)
-
-### Finding: npm Package Trust Checker
-- **Source**: Veracode blog, Shai-Hulud worm analysis, OWASP npm security cheat sheet, BrightCoding audit playbook, HackerNews
-- **Signal**: Malicious npm packages surged to 2,168 reports in 2024, Snyk found 3,000+ in 2024 alone. Shai-Hulud worm (Sep+Nov 2025) backdoored 796 packages with 20M weekly downloads. CISA issued an alert. Typosquatting is rampant (@acitons/artifact got 206K downloads). Supply chain security is a top developer concern.
-- **Current solutions**: npm audit (post-install only, CVEs only). npq (CLI, blocks on heuristics but requires install). Socket CLI (paid for teams). Snyk (free tier limited). OSSF Scorecard (GitHub-focused, complex). No simple "paste a package name, get a trust report" web tool.
-- **Agent design**: Tool 1 (GATHER): Fetch npm registry data (downloads, versions, maintainers, publish dates). Tool 2 (PROCESS): Search for CVEs, check GitHub repo health, look for malicious behavior reports. Tool 3 (OUTPUT): Write a trust report with score and install recommendation.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 1 (~300k security-conscious JS devs) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Extremely timely given recent supply chain attacks. Developer-focused (diversifies from job-seeker tools). Uses both npm registry API and GitHub API — perfect for the harness.
-
-### Finding: GitHub Issue Triage Agent
-- **Source**: GitHub Agentic Workflows (Jan 2026), Dosu.dev, Probot, GitHub Docs
-- **Signal**: Maintainers report 50-100 emails daily. Issue triage is a major pain.
-- **Current solutions**: GitHub just launched AI issue triage workflow (Jan 2026). Dosu.dev automates this. Probot has a triage app. Multiple solutions emerging fast.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 0 (~50-100k OSS maintainers) | Total: 2/3
-- **Status**: rejected
-- **Notes**: GitHub's own AI triage launched in Jan 2026. Gap closed. Too many competitors entering.
-
-### Finding: Twitter Thread Unroller
-- **Source**: UnrollNow, ThreadReader, etc.
-- **Signal**: Common need.
-- **Current solutions**: UnrollNow, ThreadReader, PingThread, Twittethread, Xunroll — all free.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~millions of Twitter users) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Extremely well-served. 10+ free tools.
-
-### Finding: arXiv Paper Summarizer
-- **Source**: Emergent Mind, HN Show HN posts
-- **Signal**: Researchers and developers want simplified paper explanations.
-- **Current solutions**: Emergent Mind (free), semantic arXiv search tools, ChatGPT (general).
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 1 (~500k researchers and ML practitioners) | Total: 2/3
-- **Status**: deferred
-- **Notes**: Emergent Mind does this well. Could revisit with a more specific angle (e.g., "explain this paper for a product manager").
-
----
-
-## 2026-03-10 — Session 2 (Round 4)
-
-### Finding: Privacy Policy / TOS Plain-Language Summarizer
-- **Source**: Web search for plain language TOS tools
-- **Signal**: People don't read TOS. General interest.
-- **Current solutions**: ToS;DR (free, crowdsourced, covers major services). Guard.io browser extension. Various AI summarizers.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 3 (~10M+ internet users concerned about privacy) | Total: 2/3
-- **Status**: rejected
-- **Notes**: ToS;DR is well-established and free. Gap closed.
-
-### Finding: Social Media Content Calendar Generator
-- **Source**: Web search for free social media tools
-- **Signal**: Small businesses want content ideas.
-- **Current solutions**: Buffer (free tier), ContentStudio, Hootsuite, Planable, Canva content planner — all have free tiers.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~millions of marketers and small businesses) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Extremely saturated market. Multiple mature free tools.
-
-### Finding: API Mock/Test Endpoint Generator
-- **Source**: Web search for developer API testing tools
-- **Signal**: Developers need mock APIs for testing.
-- **Current solutions**: Mockoon (free, open source), Beeceptor (free tier), Postman mock servers, WireMock, json-server. Many free options.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 1 (~500k backend devs) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Well-served by multiple open source tools.
-
-### Finding: Tech Stack Detector
-- **Source**: Web search for website technology detection tools
-- **Signal**: Developers and marketers want to know what technologies a website uses.
-- **Current solutions**: Wappalyzer (free extension), BuiltWith (free tier), Hexomatic, Stackcrawler, SEOmator, Enricher.io — extremely mature market.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 1 (~500k devs and marketers) | Total: 2/3
-- **Status**: rejected
-- **Notes**: BuiltWith has been doing this since 2007. Wappalyzer browser extension is free and excellent. No gap.
-
-### Finding: License Compatibility Checker
-- **Source**: GitHub (FLICT, Licensetry), npm (license-checker, license-report), Google js-green-licenses
-- **Signal**: Developers care about license compliance, especially in enterprise.
-- **Current solutions**: license-checker (npm, free), LicenseFinder (multi-language, free), FLICT (free), Google js-green-licenses (free). All CLI tools but widely available.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 1 (~200-500k enterprise devs) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Multiple free CLI tools exist. Web version would add convenience but core problem is solved.
-
-### Finding: SaaS Pricing Change Tracker
-- **Source**: SaaS Price Pulse, SaaStr pricing analysis
-- **Signal**: High — 1,800+ pricing changes across top 500 SaaS in 2025 alone. 20% average price increases.
-- **Current solutions**: SaaS Price Pulse launched Jan 2026. Tracks 260+ SaaS pages with AI extraction and Slack/email alerts.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 1 (~100-500k SaaS procurement decision-makers) | Total: 2/3
-- **Status**: rejected
-- **Notes**: SaaS Price Pulse already does exactly this. Gap closed in Jan 2026.
-
-### Finding: Code Review Assistant
-- **Source**: DEV Community, DigitalOcean, Augment Code roundups
-- **Signal**: Every developer wants better PR reviews.
-- **Current solutions**: CodeRabbit, Copilot, Graphite, Greptile, BugBot, Semgrep, SonarCloud, PR-Agent — extremely competitive space.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 3 (~10M+ developers worldwide) | Total: 2/3
-- **Status**: rejected
-- **Notes**: One of the most competitive spaces in dev tools. GitHub Copilot alone covers this.
-
-### Finding: Haunted Domain Checker (Domain Reputation Auditor)
-- **Source**: HN thread "Before you buy a domain, first check to see if it's haunted" (400+ comments), GoDaddy 2026 guide, DomCop guide
-- **Signal**: Real financial pain — people buy domains and discover they're blacklisted by Google, email servers, social media platforms, corporate firewalls. One HN user's organic search traffic "dropped to zero" after buying a haunted domain. FTC/spam filters retain old categorizations for years. Domain buyers routinely open 5+ tabs (Wayback Machine, VirusTotal, MxToolbox, Spamhaus, Google Safe Browsing) to vet a domain.
-- **Current solutions**: Individual tools exist: MxToolbox (email/DNS), VirusTotal (malware), Wayback Machine (history), Spamhaus (spam), EasyDMARC (email reputation), IPVoid (blacklists). But each checks ONE dimension. No free tool runs ALL checks and produces a single consolidated "buy or skip" report. Paid tools (DomainTools, SEMrush, Ahrefs) offer some of this but cost $100+/month.
-- **Agent design**: Tool 1 (GATHER): Fetch WHOIS/RDAP data, Wayback Machine CDX API for historical snapshots, DNS records. Tool 2 (PROCESS): Search for blacklists, malware reports, Google Safe Browsing status, email reputation, spam reports. Tool 3 (OUTPUT): Write a consolidated domain health report with buy/skip recommendation.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 0 (domain buyers + SEO agencies, ~50-100k) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Classic compound search problem — users currently open 5+ tabs to research a domain. Perfect for the harness. Developer/webmaster audience diversifies from job seekers. All data sources are publicly accessible. HN thread had strong engagement. BUILD: TypeScript clean, Next.js build passes. 3 tools: fetch_domain_info (RDAP + Wayback CDX + DNS-over-HTTPS), check_domain_reputation (6 DuckDuckGo searches for blacklists/malware/phishing/spam/email/history), write_domain_report (scored 1-10 with buy/skip recommendation).
-
-### Finding: Rental Listing Scam Detector
-- **Source**: FTC consumer advice, CNBC, Zillow, ApartmentAdvisor
-- **Signal**: 50% of rental scams reported to FTC started with fake Facebook ads. CNBC published "how to know if a rental listing is a scam" in Jan 2025. Real financial harm to renters.
-- **Current solutions**: No free automated tool. Only manual checklists (FTC, Zillow guides). Scam-detector.com has articles but no automated analysis. Property records are county-specific and fragmented.
-- **Agent design**: Tool 1 (GATHER): Fetch listing URL, extract address/price/contact info. Tool 2 (PROCESS): Verify address exists, search for landlord/management company, check phone/email against scam databases. Tool 3 (OUTPUT): Write risk report.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 3 (~10M+ people apartment hunting per year in US) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Strong emotional appeal, similar to job-scam-detector. Consumer audience. BUILD: TypeScript clean, Next.js build passes. 3 tools: fetch_rental_listing (URL fetch + platform risk analysis + text red flag scan), verify_rental_listing (address verification + landlord lookup + contact check + scam database search + price comparison), write_risk_assessment (risk score 1-10 with next steps and reporting resources).
-
-### Finding: .env / Secrets Management
-- **Source**: Security Boulevard, Doppler blog, GitGuardian
-- **Signal**: GhostAction attack (Sep 2025) exposed 3,325 secrets across 817 GitHub repos. Real problem.
-- **Current solutions**: Infisical (free, open source), Envault, EnvManager, Doppler, HashiCorp Vault. Well-served.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~1-5M developers managing secrets) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Infisical is free and open source. Gap closed.
-
----
-
-## Meta-Reflection #2 — After builds 1-5
-
-### Hit rate
-- **Round 1**: 7 researched → 3 built (43%)
-- **Round 2**: 5 researched → 1 built (20%)
-- **Round 3**: 4 researched → 1 built (25%)
-- **Round 4**: 9 researched → 2 queued (22%)
-- **Overall**: 25 problems researched → 7 with 3/3 score (28%)
-
-### Pattern: the "5-tab test"
-Every successful agent passes the same test: "Would a person open 5+ browser tabs to solve this manually?" If yes, the harness adds real value by automating the compound search. If no, a chatbot already handles it.
-- **Pass**: job-scam-detector (fetch listing + verify employer + scam reports), company-briefing (website + Glassdoor + news + funding + leadership), npm-trust-checker (registry + CVEs + repo + community), haunted-domain-checker (Wayback + blacklists + malware + email + DNS)
-- **Fail**: contract reviewer (just text analysis), TOS summarizer (single page read), content repurposer (text transformation)
-
-### What changed since reflection #1
-- **Developer tools are the strongest category.** 3 of 5 built agents are developer-focused (dep-changelog, repo-health, npm-trust). They build fastest because the data sources (npm registry, GitHub API) are structured and predictable.
-- **"Scam detector" is a repeatable template.** Job scams, rental scams, domain scams — the pattern is: fetch target → cross-reference → produce risk score. This is our strongest archetype.
-- **GAP=0 remains the #1 kill reason.** 18 of 25 ideas died because free tools already exist. The market for simple AI-wrapped utilities is saturated. The harness wins when it GATHERS from multiple sources, not when it just analyzes text.
-- **Build speed is consistent.** ~15 min per agent. The seed copy + 3 tools + config + route + README pattern is fully systematized.
-
-### Adjusted strategy for next 5
-- **Double down on the "scam detector" archetype.** Rental scam detector is queued. Could extend to: investment scam checker, e-commerce seller trustworthiness, charity verification.
-- **Explore "pre-purchase research" broadly.** Domain checker, used car VIN check, contractor/plumber vetting — any domain where someone does manual multi-source research before spending money.
-- **Try non-English-web data sources.** Government databases (FDA recalls, SEC filings, FCC complaints) are underutilized and freely accessible.
-- **Consider agents that combine 2+ existing agent outputs.** E.g., a "full security audit" that chains npm-trust-checker + repo-health-scanner for comprehensive dependency review.
-
----
-
-## 2026-03-10 — Session 2 (Round 5)
-
-### Finding: Used Car VIN History Report
-- **Source**: VinAudit, VinCheckUp, U.S. News, Edmunds
-- **Signal**: Everyone buying a used car wants a VIN report.
-- **Current solutions**: Carfax ($39.99), AutoCheck ($24.99), VinAudit ($9.99), NICB VINCheck (free), iSeeCars (free partial). Many options across price ranges.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 3 (~40M used cars sold per year in US) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Very well-served market. Free NICB tool + multiple cheap alternatives.
-
-### Finding: Contractor Due Diligence Agent
-- **Source**: LicensedCheck, Angi, CSLB, BBB, homeowner forums
-- **Signal**: Every homeowner researches contractors before hiring. Standard advice: check license, BBB, reviews, insurance. People open 5+ tabs: state license board, BBB, Google reviews, Yelp, Angi, NextDoor. Especially critical for expensive projects (roofing, plumbing, electrical).
-- **Current solutions**: LicensedCheck (free, license verification across 50 states). BBB (free, complaints). Angi (free tier, reviews). Google Reviews. BUT each is a separate lookup. No single tool produces a consolidated "should I hire this contractor?" report combining license + BBB + reviews + complaints.
-- **Agent design**: Tool 1 (GATHER): Search for the contractor/company across the web — find website, license info, BBB profile. Tool 2 (PROCESS): Verify license status, check BBB rating, aggregate reviews from Google/Yelp/Angi, search for complaints/lawsuits. Tool 3 (OUTPUT): Write a trust report with hire/avoid recommendation.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 2 (~1-5M homeowners hiring contractors per year) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Classic compound search pattern. Homeowner audience diversifies from dev + job seeker tools. BUILD: TypeScript clean, Next.js build passes. 3 tools: search_contractor (4 DuckDuckGo searches for web presence/license/BBB/reviews), verify_contractor (6 searches for complaints/lawsuits/insurance/history + website quality check), write_contractor_report (trust score 1-10 with hire/avoid recommendation + scam checklist).
-
-### Finding: Investment / Crypto Scam Checker
-- **Source**: FINRA BrokerCheck, SEC EDGAR, Bitget, SoFi
-- **Signal**: Crypto scams surging in 2025-2026. $14M+ misappropriated via WhatsApp investment clubs.
-- **Current solutions**: FINRA BrokerCheck (free, comprehensive for registered). SEC EDGAR (free). Etherscan/Solscan (free for crypto). Gap mainly for unregistered schemes.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 0 | TAM: 3 (~10M+ retail investors) | Total: 1/3
-- **Status**: rejected
-- **Notes**: BrokerCheck is very comprehensive for registered investments. Can't programmatically access FINRA/SEC. Crypto verification is wallet-address-specific — different problem shape.
-
-### Finding: Charity / Nonprofit Verification
-- **Source**: IRS Tax Exempt Org Search, Charity Navigator, GuideStar, BBB Wise Giving
-- **Signal**: Donors want to verify charities, especially after disasters.
-- **Current solutions**: IRS TEOS (free, official), Charity Navigator (free), GuideStar (free), BBB Wise Giving Alliance (free). Extremely well-served.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~1-5M charitable donors) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Multiple free government and independent tools. No gap.
-
-### Finding: Online Store Scam Checker
-- **Source**: ScamAdviser, ScamDoc, URLVoid, F-Secure
-- **Signal**: Shoppers want to verify unfamiliar online stores.
-- **Current solutions**: ScamAdviser (6.5M monthly users, free), ScamDoc (free), URLVoid (free), Scamvoid (free), F-Secure Shopping Checker (free), McAfee WebAdvisor (free).
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 3 (~100M+ online shoppers) | Total: 2/3
-- **Status**: rejected
-- **Notes**: ScamAdviser alone serves 6.5M users/month. No gap.
-
-### Finding: FDA / Product Recall Checker
-- **Source**: Recalls.gov, FDA dashboard, FoodSafety.gov
-- **Signal**: Consumer safety concern, especially for parents.
-- **Current solutions**: Recalls.gov (government consolidated, free), FDA Recall Dashboard (free), FoodSafety.gov (free), Ckiki Alert app (free).
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 3 (~10M+ consumers checking recalls) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Government already provides excellent free consolidated tools.
-
-### Finding: Academic Researcher Credibility Checker
-- **Source**: Google Scholar, university library guides, Scopus, Web of Science
-- **Signal**: Academics and journalists want to verify researcher credibility.
-- **Current solutions**: Google Scholar (free h-index and citations), Scopus (subscription), Web of Science (subscription). Google Scholar covers basic needs for free.
-- **Score**: SIGNAL: 0 | GAP: 0 | FEASIBLE: 1 | TAM: 0 (~50-100k academics and journalists) | Total: 1/3
-- **Status**: rejected
-- **Notes**: Google Scholar is comprehensive and free. Niche audience.
-
-### Finding: Competitor Analysis Tool
-- **Source**: Visualping, Crayon, Klue, Semrush
-- **Signal**: Every business wants competitor intelligence.
-- **Current solutions**: Crayon, Klue, Kompyte, Semrush, Ahrefs, Similarweb, SpyFu, Google Alerts. Extremely saturated.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~1-5M businesses) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Over 15 tools compete in this space. No gap.
-
-### Finding: Travel Safety Researcher
-- **Source**: State Department, Riskline, STEP
-- **Signal**: Travelers want safety information before trips.
-- **Current solutions**: US State Department advisories (free), Riskline free risk maps, Smart Traveler Enrollment Program, numerous travel safety apps.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 3 (~80M+ international travelers from US per year) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Government provides excellent free tools. Riskline offers free maps.
-
-### Finding: Supplement Safety Checker
-- **Source**: FDA, ConsumerLab, Recalls.gov
-- **Signal**: Consumers concerned about supplement safety. Recent recalls (MK-677, meloxicam).
-- **Current solutions**: FDA Health Fraud Product Database (free), Recalls.gov (free), ConsumerLab (paid for deep testing).
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 0 | TAM: 2 (~1-5M supplement users checking safety) | Total: 1/3
-- **Status**: rejected
-- **Notes**: FDA database covers safety alerts. Drug interaction checks have medical liability concerns.
-
-### Finding: Bootcamp / Online Course Evaluator
-- **Source**: Course Report, SwitchUp, Reddit (r/learnprogramming, r/cscareerquestions), Career Karma
-- **Signal**: Bootcamp market is $1B+. Students investing $10-20k need due diligence. Reddit is full of "is X bootcamp worth it?" posts. CIRR outcomes reporting is voluntary and inconsistent. Scam bootcamps with fake placement stats are a real problem.
-- **Current solutions**: Course Report (reviews, basic stats). SwitchUp (reviews). Career Karma (reviews + coaching, conflicts of interest — they earn referral fees). Reddit (anecdotal). No free tool that consolidates: CIRR outcomes + multi-platform reviews + BBB/complaints + pricing comparison + accreditation status into one report.
-- **Agent design**: Tool 1 (GATHER): Search for bootcamp across web, Course Report, SwitchUp, Reddit. Tool 2 (PROCESS): Deep verification — CIRR audit data, job placement claims, complaints, BBB/regulatory, accreditation, instructor credentials, curriculum quality, pricing vs alternatives. Tool 3 (OUTPUT): Scored evaluation report with enroll/skip recommendation.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 1 (~200-500k bootcamp applicants per year) | Total: 3/3
-- **Status**: built (venture 6/6)
-- **Notes**: Education consumer protection. Extends "trust checker" archetype to education. BUILD: TypeScript clean, Next.js build passes. 3 tools: search_bootcamp (5 searches), evaluate_bootcamp (8+ deep searches), write_evaluation_report (scored 1-10 with recommendation).
-
----
-
-## 2026-03-10 — Session 3 (Round 6)
-
-### Finding: Property Tax Appeal Researcher
-- **Source**: AppealDesk, PropGap.ai, JerseyAppeal.tax, TaxNetUSA, Kensington Research, county assessor guides
-- **Signal**: National average success rate for property tax appeals is 40-60%. DIY appeals take 15-40 hours of research. Multiple paid services ($49-$100+) have emerged specifically for evidence packets (AppealDesk, PropGap, AppealSeal). Homeowners routinely open 5+ tabs: county assessor site, Zillow for comps, Redfin for recent sales, tax maps, assessment ratio calculators. Cook County alone has hundreds of thousands of appeals filed annually.
-- **Current solutions**: AppealDesk ($49 flat fee). PropGap.ai (NJ & TX only, freemium). JerseyAppeal.tax (NJ only, free preview). TaxNetUSA QuickAppeal (paid). County assessor sites (free but raw data only). No free tool that automates the compound research: find comparable sales, calculate assessment ratios, identify overvaluation, and produce a formatted evidence packet.
-- **Agent design**: Tool 1 (GATHER): Web search for property address + county assessor data, Zillow/Redfin recent comparable sales, tax assessment records. Tool 2 (PROCESS): Cross-reference assessed value vs. comparable recent sales, calculate assessment ratio, identify discrepancies, find jurisdiction-specific appeal deadlines and procedures. Tool 3 (OUTPUT): Write a property tax appeal research report with comps, ratios, estimated overassessment, and filing instructions.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 2 (~2-5M homeowners who could benefit from appeals annually) | Total: 3/3
+### Finding: Moving Company Trust Checker
+- **Source**: MovingScam.com, FTC Consumer Alert (Sep 2024), BBB, NerdWallet, ConsumerAffairs
+- **Signal**: 26-41M Americans move per year. Moving fraud cases up 35% since 2024. Average victim loses $2,800. FTC issued consumer alert. BBB issues scam alerts. "Hostage" situations (holding belongings until you pay more) are common. MovingScam.com community exists for victims.
+- **Current solutions**: FMCSA Protect Your Move (DOT# lookup — bare-bones, just shows if company is authorized). MovingScam.com is informational/community. BBB has listings but no aggregated trust report. No free tool combines DOT verification + BBB status + review aggregation + complaint patterns + insurance check into a single report.
+- **Agent design**: search-mover (find company info by name/location) → verify-mover (check FMCSA DOT#, BBB, insurance status) → analyze-reviews (aggregate reviews from Google/Yelp/BBB, detect complaint patterns) → write-mover-report (trust score + red flags + recommendation)
+- **Score**: DEMAND: 7 | GAP: 1 | TOOLS: 4 | TAM: 3 (26-41M moves/year) | Problem Score: 84
+- **Venture Score (research)**: SIGNAL ✓ | GAP ✓ | FEASIBLE ✓ → 3/3
+- **Projected Composite**: 6 × 3 = 18 (meets threshold)
 - **Status**: queued
-- **Notes**: Classic 5-tab problem. Paid services prove demand. The gap is a FREE automated research tool that gathers comps and assessment data from public sources. Feasible because Zillow, Redfin, and county assessor websites are all web-fetchable. Homeowner audience diversifies portfolio. High emotional appeal — people overpaying taxes.
 
-### Finding: Daycare / Childcare Trust Checker
-- **Source**: Winnie, Childcare.gov, Care.com, TrustedCare, state licensing databases (TX HHS, NY OCFS, CO Shines, NJ, etc.)
-- **Signal**: Every parent researches daycares before enrolling. Data is fragmented across 50+ state licensing systems, each with different interfaces. Parents currently open 5+ tabs: state license lookup, Google reviews, Yelp, BBB, local parent forums. Button Law Firm (TX) built a daycare injury database because parents couldn't find consolidated violation data. Winnie tries to aggregate but only links to state databases. Real financial and safety stakes — children's wellbeing.
-- **Current solutions**: Winnie (partial — shows license numbers, links to state databases, but doesn't pull violation details into one view). Care.com (license lookup by state, links only). Childcare.gov (general guidance, no facility-specific search). State databases (free but each state has a completely different UI and data format). No single free tool consolidates: license verification + inspection violations + parent reviews + complaints + BBB status into one report.
-- **Agent design**: Tool 1 (GATHER): Search for the daycare by name/location, find state licensing page, fetch inspection reports and violation history. Tool 2 (PROCESS): Search for parent reviews (Google, Yelp), BBB complaints, news articles about incidents, verify current license status. Tool 3 (OUTPUT): Write a trust report with license status, violation summary, review sentiment, and enroll/caution recommendation.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 2 (~3-5M parents searching for childcare annually in US) | Total: 3/3
-- **Status**: queued
-- **Notes**: Extremely high emotional stakes — parents choosing who cares for their children. Classic compound search across fragmented data sources. The 50-state fragmentation is exactly the kind of problem the harness solves well. Similar pattern to contractor-trust-checker but for a much larger audience.
+### Rejected Ideas (Round 7)
 
-### Finding: Wedding Vendor Trust Checker
-- **Source**: The Knot 2026 Real Weddings Study, WeddingWire, Norton, Bitdefender, BBB, ConsumerNotice.org
-- **Signal**: 2026 study shows 89% of couples hire a photographer, 85% a caterer. Average US wedding costs $35,000+. Wedding vendor scams are rising — fake photographers with stolen portfolios, vendors who ghost after deposit. Norton published a specific guide on wedding vendor fraud. Couples currently research across 5+ sources: The Knot reviews, WeddingWire reviews, Google reviews, BBB, vendor's own website, social media presence.
-- **Current solutions**: The Knot (reviews from verified couples). WeddingWire (166,000+ reviewed vendors). BBB (complaints). Google Reviews. But each is a separate lookup. No free tool produces a consolidated "should I book this vendor?" report combining reviews across platforms + BBB complaints + business registration verification + portfolio authenticity + social media presence.
-- **Agent design**: Tool 1 (GATHER): Search for the vendor by name/location, fetch their website, find profiles on The Knot, WeddingWire, Google. Tool 2 (PROCESS): Aggregate reviews across platforms, check BBB for complaints, verify business registration, assess website quality and social media presence, search for scam reports. Tool 3 (OUTPUT): Write a trust report with review summary, red flags, and book/avoid recommendation.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 2 (~2M couples planning weddings per year in US) | Total: 3/3
-- **Status**: queued
-- **Notes**: High-stakes financial decision (deposits often $1,000-$10,000+). Classic compound search problem. Emotional appeal — protecting someone's wedding day. Extends the "trust checker" archetype (like contractor-trust-checker) to a new domain. All data sources are publicly accessible.
+| Idea | Reason | TAM |
+|------|--------|-----|
+| Auto Repair Quote Checker | GAP: 0 — RepairPal, AAA Estimate Tool, Consumer Reports | 3 |
+| Medical Bill Error Checker | GAP: 0 — FairMedBill, MedBillChecker, OrbDoc, Goodbill | 3 |
+| Puppy/Pet Scam Checker | TAM 2 at best (~3.5M purchases/yr), PetScams.com exists | 2 |
+| Subscription Cancellation Helper | Can't cancel for you; Pine AI exists | 3 |
+| Landlord Reputation Checker | GAP: 0 — RateTheLandlord, OpenIgloo, RateMyLandlord, WYL, 6+ platforms | 3 |
+| Event Ticket Scam Checker | Dynamic QR codes make verification moot; venue-specific | 3 |
+| Government Benefits Finder | GAP: 0 — USAGov benefit finder, BenefitsCheckUp.org | 3 |
+| Counterfeit Product Checker | GAP: 0 — Fakespot, ReviewMeta | 3 |
+| Elder Care Facility Checker | GAP: 0 — Medicare Care Compare, U.S. News ratings | 3 |
+| Wage Theft Detector | Not agent pattern; more legal/calculator | 3 |
+| Online Pharmacy Verifier | GAP: 0 — NABP, FDA BeSafeRx, PharmacyChecker, LegitScript | 3 |
+| Tax Preparer Verifier | IRS has PTIN directory; narrow gap | 3 |
+| Influencer Fake Follower Checker | GAP: 0 — HypeAuditor, Modash, Upfluence, Collabstr, 10+ free tools | 3 |
+| Scholarship Scam Checker | FTC/Fastweb guidance exists; narrow market | 2 |
+| Small Business License Finder | GAP: 0 — SBA license/permit finder | 2 |
+| Roofing Storm Chaser Checker | Same pattern as contractor-trust-checker already built | 2 |
 
-### Finding: Auto Repair Shop Trust Checker
-- **Source**: BBB, ASE.com, Consumer Reports, CarParts.com, Quora
-- **Signal**: Auto repair shops rank 16th on BBB's most-complained-about businesses list. Every car owner needs to find a trustworthy mechanic. People currently check 5+ sources: Google reviews, Yelp, BBB, ASE certification lookup, word of mouth. ASE certification requires verification through their website. Common scams: unnecessary repairs, inflated estimates, bait-and-switch pricing.
-- **Current solutions**: Google Reviews (general). Yelp (general). BBB (complaints). ASE website (certification lookup only). CarFax Service Shop locator (basic). RepairPal (estimates + ratings). Each is a separate check. No free tool consolidates: ASE certification verification + BBB complaints + multi-platform review aggregation + pricing fairness + scam report search into one report.
-- **Agent design**: Tool 1 (GATHER): Search for the shop by name/location, find website, Google/Yelp/BBB profiles. Tool 2 (PROCESS): Check ASE certification status, aggregate reviews, search for complaints and scam reports, verify business registration, assess website professionalism. Tool 3 (OUTPUT): Write a trust report with certification status, review summary, complaint history, and use/avoid recommendation.
-- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 2 (~5-10M car owners seeking new mechanics per year) | Total: 3/3
-- **Status**: queued
-- **Notes**: Very large audience — nearly every car owner. Same "trust checker" archetype. Compound search across ASE + BBB + reviews + complaints. Real financial pain (repair bills can be $500-$5,000+). Diversifies into automotive vertical.
+### Notes
+- GAP=0 continues to kill most TAM 3 ideas (12/16 rejected for this reason)
+- The "trust checker / verifier" archetype remains strongest for finding gaps
+- Crowdfunding verification is a clear gap — no automated tool exists despite 200M+ donors
+- Moving company trust checking has a clear gap — FMCSA lookup is too bare-bones
+- Both fit the proven GATHER → PROCESS → OUTPUT pattern
+- **CONSTRAINT**: No more trust-checkers. Moving Company Trust Checker is queued but violates the diversity rule. Research pivoting to non-trust-checker architectures.
 
-### Finding: Doctor / Physician Credential Checker
-- **Source**: DocInfo.org, ProPublica, FSMB, Healthgrades, state medical boards, NewsNation
-- **Signal**: ProPublica built a "Nursing Home Inspect" and "Investigating Doctors" tool. People do check doctors before appointments. Real concern about malpractice and disciplinary history.
-- **Current solutions**: DocInfo.org (free, comprehensive — license + disciplinary from FSMB data). Healthgrades (free — malpractice, sanctions, board actions, reviews, hospital affiliations). State medical board websites (free, license + disciplinary). ProPublica Investigating Doctors tool (free). Multiple free tools already provide consolidated views.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 3 (~10M+ patients checking doctors per year) | Total: 2/3
-- **Status**: rejected
-- **Notes**: DocInfo.org and Healthgrades already consolidate license, disciplinary, and malpractice data for free. No meaningful gap to fill.
+---
 
-### Finding: Neighborhood Move-In Researcher
-- **Source**: AreaVibes, Niche.com, City-Data, NeighborhoodScout, SafeWise, Walk Score
-- **Signal**: Everyone researches neighborhoods before moving. Very common pain point.
-- **Current solutions**: AreaVibes (free — crime, schools, cost of living, amenities, livability score). Niche.com (free — A-F grades on safety, schools, nightlife, cost of living). City-Data (free — extensive demographics, crime, housing). Walk Score (free — walkability, transit, bike scores). SpotCrime (free — real-time crime data). GreatSchools.org (free — school ratings). Multiple mature free tools provide comprehensive neighborhood data.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 3 (~10M+ people moving per year) | Total: 2/3
-- **Status**: rejected
-- **Notes**: AreaVibes alone provides a consolidated livability score combining crime, schools, amenities, and cost of living — for free. Niche.com gives A-F grades. Market is very well served.
+## 2026-03-10 — Session 4 (Round 8) — Non-Trust-Checker Research
 
-### Finding: Natural Hazard Risk Assessment for Home Buyers
-- **Source**: FEMA National Risk Index, RiskFactor.com (First Street Foundation), ClimateCheck.com, Cal MyHazards, Freddie Mac
-- **Signal**: Growing concern about climate risk in real estate. 14 states don't require flood disclosure to buyers. Real financial impact — flood insurance averaging $1,152/year.
-- **Current solutions**: RiskFactor.com (free — flood, fire, heat, wind, air quality scores by address). ClimateCheck.com (free report — heat, flood, storm, drought, fire ratings through 2050). FEMA National Risk Index (free — 18 hazards by community). FEMA Flood Map Service (free — flood zone by address). Cal MyHazards (free, CA only — earthquake, wildfire, flood). Multiple free tools already provide multi-hazard risk assessment.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~5M home buyers per year) | Total: 2/3
-- **Status**: rejected
-- **Notes**: RiskFactor.com already provides a free consolidated multi-hazard report by address. ClimateCheck offers a free report with climate projections through 2050. Gap closed by First Street Foundation's free tool.
+Searched Reddit (r/smallbusiness, r/entrepreneur, r/freelance, r/sidehustle, r/personalfinance, r/homeowners, r/homeimprovement) and general web for pain points solvable by agents with DIFFERENT architectures: data transformation, monitoring, generation, analysis, comparison, automation.
 
-### Finding: Trademark Availability Researcher
-- **Source**: USPTO, Trademarkia, LegalZoom, Trademark Engine, Markavo, PQAI
-- **Signal**: Small businesses need to check trademark availability before launching.
-- **Current solutions**: USPTO Patent Public Search (free, official). Trademarkia (free, user-friendly search of USPTO database). LegalZoom (free exact match search). Trademark Engine (free preliminary search). Markavo (free attorney-led search). Multiple free tools with good UX.
-- **Score**: SIGNAL: 1 | GAP: 0 | FEASIBLE: 1 | TAM: 2 (~1-3M small businesses registering trademarks) | Total: 2/3
-- **Status**: rejected
-- **Notes**: Trademarkia provides excellent free USPTO search. LegalZoom and Trademark Engine also offer free searches. No gap.
+### TOP 5 FINDINGS
+
+---
+
+### Finding 1: Benefits Eligibility Navigator Agent
+- **Source**: Reddit r/personalfinance, NCOA, Link Health, USAGov, multiple advocacy orgs
+- **Signal**: $140 billion in critical federal benefits go unclaimed annually (Link Health, 2025). 3 out of 5 eligible older adults don't receive SNAP. Millions miss EITC. Medicare Savings Programs go unclaimed by 2-3 million eligible people ($3.96-5.94B annually). Reddit threads about "didn't know I qualified" are common in r/personalfinance, r/povertyfinance, r/assistance. Benefits.gov exists but is clunky government form — not conversational, doesn't explain trade-offs, doesn't handle benefits cliff analysis.
+- **Current solutions**: Benefits.gov (government tool, basic questionnaire, clunky UX). BenefitsCheckUp.org (NCOA — seniors only). SSA.gov eligibility screener (SSI only). No free tool that takes a conversational approach: "tell me about your situation" → comprehensive scan of ALL programs → personalized report with dollar amounts + application links + benefits cliff warnings.
+- **Agent design**: GATHER: gather-user-profile (income, household, state, age, disabilities, veteran status) → PROCESS: scan-federal-programs (SNAP, Medicaid, EITC, CHIP, Lifeline, LIHEAP, WIC, SSI, Section 8, Pell Grants) + scan-state-programs (state-specific by zip code) + analyze-benefits-cliff (model income thresholds and cliff effects) → OUTPUT: write-eligibility-report (eligible programs, estimated dollar value, application links, cliff warnings)
+- **Architecture type**: ANALYSIS + GENERATION (not trust-checker)
+- **Score**: DEMAND: 9 | GAP: 1 (benefits.gov exists but limited, no conversational AI tool) | TOOLS: 4 | TAM: 3 (tens of millions eligible)
+- **Venture Score (research)**: SIGNAL ✓ | GAP ✓ | FEASIBLE ✓ → 3/3
+- **Projected Composite**: 6 × 3 = 18 (meets threshold)
+- **Why NOT a trust-checker**: This is a data-gathering + eligibility analysis + report generation agent. It doesn't verify trust or detect scams — it matches user profiles against public program criteria and generates personalized recommendations.
+- **Risk**: Benefits eligibility rules are complex and change. LLM could hallucinate eligibility. Needs strong disclaimers. Must rely on public data sources (benefits.gov API, state program pages).
+- **Status**: STRONG CANDIDATE — queued for evaluation
+
+---
+
+### Finding 2: Freelancer Tax Deduction Finder Agent
+- **Source**: Reddit r/freelance, r/sidehustle, r/personalfinance, FlyFin, TurboTax forums
+- **Signal**: 72-76 million Americans freelance in some capacity (MBO Partners 2025). Freelancers without systematic expense tracking miss an average of $2,400 in legitimate deductions annually. 54% experience delayed payments. FlyFin claims average savings of $7,800. Reddit regularly has threads about "what can I deduct" and "missed deductions." Self-employed spend hours categorizing expenses for Schedule C.
+- **Current solutions**: FlyFin ($0-$16/mo, requires bank account connection — OAuth). TurboTax Self-Employed ($129+). Keeper Tax (free tier limited). taxr.ai (found $5,200 in missed deductions for one user). Most tools require bank account OAuth to work well.
+- **Agent design**: GATHER: gather-business-profile (industry, work type, home office?, vehicle?, travel?) + gather-expense-categories (what they spend on) → PROCESS: match-deductions (IRS Schedule C categories, industry-specific deductions, home office rules, vehicle deduction methods, health insurance, retirement contributions) + estimate-savings (calculate potential savings per deduction) → OUTPUT: write-deduction-report (complete list of applicable deductions with IRS references, estimated dollar savings, common mistakes to avoid)
+- **Architecture type**: ANALYSIS + GENERATION (not trust-checker)
+- **Score**: DEMAND: 8 | GAP: 1 (tools exist but require OAuth/bank connection — this is a guidance agent, not a tracking tool) | TOOLS: 3 | TAM: 3 (72M+ freelancers)
+- **Venture Score (research)**: SIGNAL ✓ | GAP ✓ (guidance agent without OAuth is the gap) | FEASIBLE ✓ → 3/3
+- **Projected Composite**: 6 × 3 = 18 (meets threshold)
+- **Why NOT a trust-checker**: This is a personalized analysis agent. It matches user profile against IRS deduction rules and generates a comprehensive report of what they can deduct and how much they might save.
+- **Risk**: Tax rules are complex and change annually. Must include strong disclaimers ("not tax advice"). Cannot access actual bank data without OAuth — works as a guidance/education tool.
+- **Status**: STRONG CANDIDATE — queued for evaluation
+
+---
+
+### Finding 3: Home Repair Cost Estimator Agent
+- **Source**: Reddit r/homeimprovement, r/homeowners, HomeAdvisor, Angi, NerdWallet
+- **Signal**: ~130M homeowner households in US. Reddit r/homeimprovement (3.5M members) constantly has posts asking "how much should X cost?" and "is this quote fair?" Contractor quotes vary by 100%+ for the same job. Homeowners have no baseline for what's reasonable. One thread: "I've seen as much as a 100% difference between high and low bids." Average homeowner does 2-3 home repairs/improvements per year.
+- **Current solutions**: HomeAdvisor Cost Guide (basic ranges, not location-adjusted). Angi (requires sharing contact info, leads to contractors calling you). Fixr.com (basic calculator). No free tool takes project description + location → researches current local pricing data → generates a detailed cost breakdown with line items + red flags to watch for + negotiation tips.
+- **Agent design**: GATHER: gather-project-details (description, scope, materials, location/zip) + research-local-costs (search for current pricing data by region and project type) → PROCESS: estimate-costs (break down labor, materials, permits, overhead, profit margin) + analyze-quote (if user has a quote, compare it to estimates) → OUTPUT: write-cost-report (detailed breakdown, fair price range, red flags, questions to ask contractor, negotiation tips)
+- **Architecture type**: ANALYSIS + COMPARISON (not trust-checker)
+- **Score**: DEMAND: 9 | GAP: 1 (existing tools are basic calculators, not LLM-powered analysis) | TOOLS: 3 | TAM: 3 (130M+ homeowner households)
+- **Venture Score (research)**: SIGNAL ✓ | GAP ✓ | FEASIBLE ✓ → 3/3
+- **Projected Composite**: 6 × 3 = 18 (meets threshold)
+- **Why NOT a trust-checker**: This does not verify a contractor's trustworthiness. It estimates what a project SHOULD cost based on public pricing data. It's a cost analysis / comparison agent.
+- **Risk**: Pricing data varies enormously by region. LLM estimates may be imprecise. Must include ranges and disclaimers. Value is in structured breakdown + red flag analysis, not precise numbers.
+- **Status**: STRONG CANDIDATE — queued for evaluation
+
+---
+
+### Finding 4: Relocation Research Agent
+- **Source**: Reddit r/IWantOut, r/SameGrassButGreener, r/personalfinance, U.S. Census, PODS, Allied Van Lines
+- **Signal**: ~26 million Americans move per year (Census 2024). ~4.5 million move to a new state. Reddit r/SameGrassButGreener (500K+ members) is entirely dedicated to "where should I move?" questions. People spend hours researching cost of living, schools, crime, weather, job markets. "Neighborhood matters more than city" is common advice — but comparing neighborhoods across cities is extremely tedious.
+- **Current solutions**: CityMatch.ai (exists but limited — compares cities, not neighborhoods; paid tiers). Niche.com (ranking lists but not personalized). Numbeo (cost of living only). AreaVibes (livability scores). No free tool that takes your priorities + constraints → researches multiple cities/neighborhoods → generates a personalized comparison report with pros/cons + cost analysis + school ratings + commute times.
+- **Agent design**: GATHER: gather-priorities (budget, climate, job industry, school age children, commute tolerance, lifestyle priorities) + research-cities (fetch cost of living, crime stats, school ratings, job market data, weather data for candidate locations) → PROCESS: score-locations (weighted scoring across user priorities) + compare-neighborhoods (drill into specific neighborhoods within top cities) → OUTPUT: write-relocation-report (ranked recommendations with detailed pros/cons, cost comparison, school data, lifestyle fit analysis)
+- **Architecture type**: COMPARISON + GENERATION (not trust-checker)
+- **Score**: DEMAND: 8 | GAP: 1 (CityMatch.ai emerging but limited/paid; no free comprehensive agent) | TOOLS: 4 | TAM: 3 (26M moves/year)
+- **Venture Score (research)**: SIGNAL ✓ | GAP ✓ | FEASIBLE ✓ → 3/3
+- **Projected Composite**: 6 × 3 = 18 (meets threshold)
+- **Why NOT a trust-checker**: This is a multi-source data comparison and recommendation agent. It gathers data from public sources, scores/ranks against user preferences, and generates a personalized research report.
+- **Risk**: Data freshness (crime stats, school ratings may lag). Quality depends on publicly available APIs and web data. CityMatch.ai is an emerging competitor.
+- **Status**: MODERATE CANDIDATE — CityMatch.ai narrows the gap
+
+---
+
+### Finding 5: Cell Phone / Internet Plan Optimizer Agent
+- **Source**: Reddit r/NoContract, r/personalfinance, CNBC, WhistleOut, NerdWallet
+- **Signal**: Average US cell phone bill is $141/month (JD Power 2025). Family plans average ~$200/month. Reddit r/NoContract (600K+ members) is dedicated to finding cheaper plans. Common posts: "What plan should I get?", "Am I overpaying?", "Confused by unlimited plans." Switching carriers can save 30-50%. The "unlimited doesn't mean unlimited" confusion is pervasive.
+- **Current solutions**: WhistleOut (plan comparison site — useful but not personalized to YOUR usage). BestPhonePlans.net (comparison tables). Coverage map tools (signal quality only). No free tool takes your current plan + actual usage (GB data, minutes, texts) + location → searches current plan offerings → generates a personalized recommendation with estimated savings + coverage comparison + switch instructions.
+- **Agent design**: GATHER: gather-current-plan (carrier, plan name, monthly cost, contract status) + gather-usage (data GB/month, minutes, texts, hotspot needs, international) + gather-preferences (coverage priority, budget, family lines, phone financing) → PROCESS: search-plans (fetch current offerings from major and MVNO carriers) + compare-plans (match usage to plan tiers, calculate true cost including fees/taxes) + estimate-savings (compare current spend to recommended alternatives) → OUTPUT: write-plan-report (top 3 recommendations with estimated monthly savings, coverage comparison, pros/cons, how to switch)
+- **Architecture type**: COMPARISON + OPTIMIZATION (not trust-checker)
+- **Score**: DEMAND: 7 | GAP: 1 (WhistleOut exists but not conversational/personalized AI agent) | TOOLS: 3 | TAM: 3 (330M+ cell phone users in US)
+- **Venture Score (research)**: SIGNAL ✓ | GAP ✓ | FEASIBLE ✓ → 3/3
+- **Projected Composite**: 6 × 3 = 18 (meets threshold)
+- **Why NOT a trust-checker**: This is a cost optimization / comparison agent. It doesn't verify anything — it finds you a cheaper plan based on your actual usage.
+- **Risk**: Plan data changes frequently. Carrier websites may be hard to scrape. MVNO landscape is fragmented. WhistleOut is an established competitor (though not AI-conversational).
+- **Status**: MODERATE CANDIDATE — WhistleOut narrows gap somewhat
+
+---
+
+### Additional Rejected Ideas (Round 8)
+
+| Idea | Reason | TAM |
+|------|--------|-----|
+| Contractor Quote Comparison Tool | GAP: 0 — BidCompareAI (GreatBuildz), Quoterly | 3 |
+| Medical Bill Error Checker | GAP: 0 — FairMedBill, MedAudit, BillMeLess, MedBillChecker, OrbDoc | 3 |
+| Lease Agreement Analyzer | GAP: 0 — LeaseLogic, LeaseAI, goHeather, TurboTenant | 3 |
+| Meal Planning / Grocery Agent | GAP: 0 — Ollie, MealFlow, Nourishing Meals, 12+ apps | 3 |
+| Google Review Response Generator | GAP: 0 — Zapier workflow, EmbedSocial, Chrome extensions | 3 |
+| GBP Post Generator | GAP: 0 — MaxAI, Easy-Peasy, GBPPromote, Circleboom, OneUp | 3 |
+| Product Listing Optimizer | GAP: 0 — Etsy built-in AI, 13+ Etsy AI tools, Amazon tools | 3 |
+| Subscription Tracker | GAP: 0 — Rocket Money, Pine AI, TrackMySubs | 3 |
+| Price Monitoring / Deal Alert | GAP: 0 — Honey, Flipp, CamelCamelCamel, 12+ tools | 3 |
+| Home Maintenance Schedule App | GAP: 0 — Dib, HomeLedger, Oply, BrightNest, HomeZada | 3 |
+| Privacy Policy / ToS Generator | GAP: 0 — TermsFeed, Termly, FreePrivacyPolicy | 3 |
+| Business Name Generator | GAP: 0 — Looka, Namelix, Shopify, Wix, 10+ free tools | 3 |
+| Grant Finder / Writer | GAP: 0 — GrantWatch AI, Grantable, Grantify, Granter | 2 |
+| Appliance Repair vs Replace | GAP: 0 — repairorreplace.app, iFixit FixBot | 3 |
+| Health Insurance Plan Compare | GAP: 0 — JambaCare, HealthBird, Care Compare, Healthcare.gov | 3 |
+| Reseller Item Value Checker | GAP: 0 — Underpriced app | 2 |
+| Used Car Value Checker | GAP: 0 — KBB, Edmunds, Carfax (already rejected) | 3 |
+| Solar Panel ROI Calculator | GAP: 0 — EnergySage, Project Sunroof, PVWatts | 3 |
+| Energy Rebate Finder | GAP: 0 — Energy Rebate Calculator, ENERGY STAR Rebate Finder, Rewiring America, DSIRE | 3 |
+| Building Permit Requirements | GAP: 0 — CodeComply, CivCheck, PermitFlow, PermitZen | 3 |
+| RFP Proposal Writer | GAP: 0 — DeepRFP, AutoRFP, Responsive, Inventive AI | 2 |
+| Open Source Alternative Finder | GAP: 0 — OpenAlternative, osalt.com, AlternativeTo | 2 |
+
+### Session 4 (Round 8) Summary
+- Searched 6 subreddit categories + general Reddit searches across 40+ queries
+- Validated gaps by searching for existing tools in each category
+- **Key insight**: The consumer/homeowner/freelancer space is MORE crowded than the developer tool space. Almost every obvious pain point has 3-10 free tools already.
+- **Strongest non-trust-checker candidates** (in order):
+  1. Benefits Eligibility Navigator — largest dollar impact ($140B unclaimed), gap exists (benefits.gov is clunky)
+  2. Freelancer Tax Deduction Finder — massive TAM (72M+), gap for NO-OAuth guidance agent
+  3. Home Repair Cost Estimator — universal problem, gap for LLM-powered analysis vs basic calculators
+  4. Relocation Research Agent — strong subreddit signal (r/SameGrassButGreener 500K+), CityMatch.ai emerging
+  5. Cell Phone Plan Optimizer — massive TAM (330M+), WhistleOut is the main competitor
+
+---
+
+## 2026-03-10 — Session 4 (Round 9) — Deep Validation of Top 5 Candidates
+
+Conducted extensive web research across Hacker News, Reddit, GitHub trending, and general consumer pain points to validate/invalidate the Round 8 candidates. Searched 30+ queries across HN "Ask HN" threads, GitHub trending repos, consumer frustration forums, and existing tool landscapes.
+
+### Validation Results
+
+#### Finding 1 (RE-EVALUATED): Benefits Eligibility Navigator Agent
+- **GAP UPDATE**: LEO by Link Health is an AI chatbot that already guides patients through SNAP, WIC, Lifeline applications. Nava Labs is piloting an AI chatbot for benefits navigators. Servos has an AI-based integrated eligibility platform with conversational interface. USAGov benefit finder covers 1,000+ programs.
+- **GAP STATUS**: NARROWING. LEO (Link Health) is specifically aimed at healthcare/low-income. Nava is government-facing (helps navigators, not end users directly). Neither is a comprehensive free consumer-facing tool that covers ALL programs with personalized dollar-value estimates + benefits cliff analysis. The gap still exists for a COMPREHENSIVE all-programs agent, but it's smaller than initially assessed.
+- **REVISED ASSESSMENT**: Still viable but GAP is weaker. LEO + Nava are early-stage competitors. The differentiation would be: (1) covers ALL programs not just healthcare, (2) estimates dollar values, (3) models benefits cliff. Risk: complex eligibility rules could cause harmful hallucinations.
+- **Status**: QUEUED — still strongest candidate
+
+#### Finding 2 (RE-EVALUATED): Freelancer Tax Deduction Finder Agent
+- **GAP UPDATE**: FlyFin requires bank account linking. Keeper requires bank connection (free 14-day trial only). TaxGPT exists as a general AI tax assistant. Cash App Taxes is free but not specifically a deduction finder. QuickBooks has comprehensive guides.
+- **GAP STATUS**: EXISTS. No free, no-OAuth, conversational AI agent that takes business profile → generates personalized deduction checklist with estimated savings. The guidance tools (QuickBooks, blog posts) are static articles. The AI tools (FlyFin, Keeper) require bank OAuth. The gap is for an interactive, personalized deduction finder that works WITHOUT connecting bank accounts.
+- **REVISED ASSESSMENT**: Still strong. The no-OAuth constraint is the key differentiator.
+- **Status**: QUEUED — strong candidate
+
+#### Finding 3 (RE-EVALUATED): Home Repair Cost Estimator Agent
+- **GAP UPDATE**: HomeAdvisor, Angi, Fixr, Homewyse, RemodelingCalculator, Remodelum, Block Renovation, Decor8 AI all offer cost estimation. Some (Remodelum, Block Renovation) use zip-code-level pricing from real projects. Decor8 AI uses AI + regional pricing.
+- **GAP STATUS**: NARROWING. The basic "what does X cost" space is well-served by calculators. The gap is for: (1) natural language project description → detailed breakdown, (2) "is this quote fair?" analysis with line-item comparison, (3) red flags + negotiation tips. This is more nuanced than a simple calculator.
+- **REVISED ASSESSMENT**: Moderate. Many calculators exist. The LLM advantage is in nuanced analysis of specific quotes and generating personalized advice, not raw cost estimation.
+- **Status**: QUEUED — moderate candidate
+
+#### Finding 4 (RE-EVALUATED): Relocation Research Agent
+- **GAP UPDATE**: CityMatch.ai compares 100+ cities with AI-powered match scores. NerdWallet, Numbeo, BestPlaces.net, SmartAsset, MoneyGeek, ERI all offer free cost-of-living calculators. CityVibeCheck compares by ZIP code. A Hacker News Show HN built an interactive map comparing cost of living by US county.
+- **GAP STATUS**: NARROW. CityMatch.ai is a direct competitor. The existing cost-of-living calculators are numerous and free. The remaining gap is for a CONVERSATIONAL agent that takes priorities → generates a personalized multi-city comparison report (not just cost, but schools, crime, weather, commute, lifestyle fit). But CityMatch.ai is moving into this space.
+- **REVISED ASSESSMENT**: Weakened. CityMatch.ai + numerous free calculators narrow the gap significantly.
+- **Status**: DEFERRED — gap too narrow given CityMatch.ai
+
+#### Finding 5 (RE-EVALUATED): Cell Phone / Internet Plan Optimizer Agent
+- **GAP UPDATE**: WhistleOut offers daily-updated plan comparison by area. BestPhonePlans.net compares. HighSpeedOptions allows plan comparison. These are comparison TABLES, not conversational agents. 14% of US adults willing to switch ISPs. Average cell bill $141/mo, families ~$200/mo. r/NoContract has 600K+ members.
+- **GAP STATUS**: EXISTS but narrow. WhistleOut is comprehensive but not conversational. The gap is for: input your ACTUAL usage → get personalized recommendation with estimated savings. WhistleOut does some of this but it's a traditional comparison site, not an AI agent.
+- **REVISED ASSESSMENT**: Moderate. The plan data is the hard part — carriers change plans constantly. The LLM advantage is in personalized analysis + recommendations.
+- **Status**: QUEUED — moderate candidate
+
+### New Ideas from Round 9 Research
+
+#### Finding 6 (NEW): Medical Bill Explainer + Appeal Letter Agent
+- **Source**: HN thread about $195K hospital bill reduced to $33K using Claude. Tom's Hardware, Fox News, Medium all covered the story. 3 out of 4 medical bills contain errors (Medical Billing Advocates of America). 40% of Americans confused by medical bills (YouGov/AKASA). 57% have been surprised by a bill (NORC). Denial appeal success rate: 41%.
+- **Signal**: VERY STRONG. The $195K→$33K story went viral on HN. Multiple HN threads about surprise billing. The Medical Billing Advocates stat (75% of bills have errors) is widely cited. 40% of 330M Americans = 132M people confused by medical bills.
+- **Current solutions**: OrbDoc (free CPT code checker), MedAudit (free upload + AI analysis), FairMedBill (launched Feb 2026, HIPAA-compliant, 10-engine detection), BillMeLess (AI-powered). These are emerging tools but MOST are very new (2025-2026 launches).
+- **GAP STATUS**: CLOSING FAST. MedAudit and FairMedBill are strong new entrants. OrbDoc is free. However, none combine all three: (1) plain-English bill explanation, (2) error detection, AND (3) appeal/dispute letter generation in a single free conversational agent.
+- **REVISED ASSESSMENT**: The GAP was strong 6 months ago but is closing. MedAudit + FairMedBill + OrbDoc together cover most of the use case. Marked as rejected (GAP: 0 in aggregate).
+- **Status**: REJECTED — GAP: 0 in aggregate (MedAudit, FairMedBill, OrbDoc, BillMeLess)
+
+#### Additional Rejected Ideas (Round 9)
+
+| Idea | Reason | TAM |
+|------|--------|-----|
+| Recipe Dietary Converter | GAP: 0 — Recipe Revamped, Recipe Converter Chrome ext, The Allergy Chef | 3 |
+| Credit Card Rewards Optimizer | GAP: 0 — Card Caddie (free, HN Show HN), Kudos Dream Wallet, Wallaby | 3 |
+| Product Review Synthesizer | GAP: 0 — ChatGPT/Perplexity already do this; 56% of consumers use AI for shopping | 3 |
+| HOA Rules Decoder | TAM 2 at best (~75M in HOAs but niche pain); not enough signal | 2 |
+| Moving Checklist Generator | GAP: 0 — Template.net AI generator (free, no signup), Legal Templates, Vertex42 | 3 |
+| Academic Paper Summarizer | GAP: 0 — Explainpaper, Emergent Mind, Elicit, Consensus (already rejected) | 1 |
+
+### Round 9 Summary — Final Ranking
+
+After deep validation, the **revised ranking** of non-trust-checker candidates:
+
+1. **Freelancer Tax Deduction Finder** — STRONGEST. 72M+ freelancers, no free no-OAuth AI guidance agent exists. FlyFin/Keeper require bank connection. The gap for "tell me about your business → here are your deductions + estimated savings" is real and unfilled. Architecture: ANALYSIS + GENERATION.
+
+2. **Benefits Eligibility Navigator** — STRONG but riskier. $140B unclaimed, gap exists but LEO (Link Health) and Nava Labs are entering the space. Our differentiation: comprehensive ALL-programs coverage + dollar estimates + cliff analysis. Risk: eligibility rules are complex, hallucination risk is high, competitors are well-funded.
+
+3. **Home Repair Cost Estimator** — MODERATE. Universal problem (130M homeowner households), but many calculators exist. The LLM edge is in natural-language project description → nuanced breakdown + quote fairness analysis. Not just "what does X cost" but "is THIS quote fair?"
+
+4. **Cell Phone Plan Optimizer** — MODERATE. Massive TAM (330M+), WhistleOut is the main competitor but not conversational AI. The hard part is keeping plan data current.
+
+5. ~~Relocation Research Agent~~ — DEFERRED. CityMatch.ai + 10+ free calculators narrow the gap too much.
