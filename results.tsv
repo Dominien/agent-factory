@@ -11,3 +11,4 @@ haunted-domain-checker	3	3	6	shipped	0	fetch-domain-info|check-domain-reputation
 freelancer-deduction-finder	3	3	6	shipped	3	search-deductions|analyze-expenses|write-deduction-report	Helps freelancers discover tax deductions they may be missing — no bank connection required
 regulatory-compliance-briefing	3	3	6	shipped	3	search-regulations|fetch-regulatory-details|write-compliance-briefing	Personalized regulatory compliance briefings for small businesses by type, state, and size
 property-tax-appeal-advisor	3	3	6	shipped	3	search-comparable-sales|analyze-assessment|write-appeal-report	Helps homeowners determine if overassessed, find comps, and generate appeal guides with draft letters
+wage-rights-advisor	3	3	6	shipped	4	analyze-employment|search-wage-laws|calculate-owed-wages|write-wage-report	Helps workers determine FLSA exempt/non-exempt status, find state wage laws, calculate owed overtime, and file complaints

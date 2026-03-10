@@ -43,3 +43,58 @@ Key finding: AI tool explosion in 2024-2025 filled almost every consumer-facing 
 | EU AI Act compliance advisor | Too similar to regulatory-compliance-briefing already built | 3 |
 | Flight delay compensation | All services take 25-50% commission; agent can't file claims | 4 |
 | E-commerce review analyzer | GAP: 0 — ChatGPT/Perplexity do this natively; Fakespot exists | 3 |
+| SEC 10-K filing summarizer | GAP: 0 — ChatGPT, Claude, Perplexity, Search10K, V7 Go all handle this | 3 |
+| Freelance rate calculator | GAP: 0 — FreelanceHourlyRate.com, Upwork calculator, PineBill, 5+ free | 3 |
+| Foreign credential recognition advisor | GAP: 0 — WES, NACES, country-specific gov tools exist | 3 |
+| Digital nomad tax advisor | GAP: 0 — SafetyWing, Nomad Tax, Bright!Tax all have free guides | 2 |
+| Healthcare cost estimator | GAP: 0 — Healthcare Bluebook, MDsave, GoodRx, CMS price transparency | 4 |
+| Student loan repayment optimizer | GAP: 0 — StudentAid.gov, Chipper, Payitoff, NerdWallet all free | 3 |
+| EV tax credit eligibility checker | GAP: 0 — FuelEconomy.gov official tool, Edmunds, KBB | 3 |
+| Social Security benefit optimizer | GAP: 0 — SSA.gov calculator, AARP, Open Social Security (free) | 4 |
+
+### Research Round 3: Hunting TAM 4+ with new search strategies
+
+Tried fundamentally different angles: policy changes (DOGE), fragmented local data, professional niches, episodic problems, trending repos.
+
+Key finding: Every consumer-facing "research and report" niche with TAM 4+ has GAP: 0 due to 2024-2025 AI explosion. Breakthrough came from labor/employment domain.
+
+### Finding: Wage Rights Advisor ✅ QUEUED
+- **Source**: EPI.org, DOL.gov, Northwestern research, KeeVee wage theft stats
+- **Signal**: $50B/year in wage theft in US. 82M workers have experienced pay issues. $3,300/year avg loss per victim. Only $1.5B recovered in 2 years. DOL enforcement at 52-year low due to DOGE cuts. 1 in 3 workers can't accurately calculate overtime owed. Workers constantly search Reddit, legal forums for "am I owed overtime?"
+- **Current solutions**: Simple overtime calculators (Clockify, Omnicalculator) do math only. OnPay has employee-vs-contractor checker (not exempt/non-exempt). DOL.gov has info but no interactive tool. No free AI tool combines FLSA exemption analysis + state wage law research + personalized back-pay calculation + filing guidance.
+- **Agent design**: GATHER (user's job details: role, duties, salary, hours, state) → ANALYZE (determine exempt/non-exempt under FLSA duties tests + salary threshold; research state-specific overtime/wage rules; calculate potential owed wages) → GENERATE (personalized wage rights report with exemption analysis, calculations, state filing instructions, relevant authorities)
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (82M+ workers affected) | Composite: 24
+- **Status**: queued → building → SHIPPED
+- **Notes**: First TAM 4 idea with genuine gap! NOT a trust-checker — legal research + calculation + advisory agent. Different architecture. The gap exists because existing tools are either simple calculators (no legal analysis) or law firm lead-gen (not free tools). Agent fills the middle: free, AI-powered, personalized wage rights analysis.
+
+### Rejected Ideas (this round)
+
+| Idea | Reason | TAM |
+|------|--------|-----|
+| School choice comparison tool | GAP: 0 — Niche, GreatSchools, SchoolDigger, Zelma (AI, Brown Univ) | 4 |
+| Wedding vendor comparison | GAP: 0 — The Knot, Zola, WeddingWire all free | 3 |
+| Product recall checker | GAP: 0 — Food Recalls app, FDA Recall Scanner, ScanRecall, Recalls.gov | 4 |
+| HOA dispute advisor | GAP: 0 — LogicBalls HOA response, HOA Dominator Bot, Makeform | 3 |
+| Used car buying advisor | GAP: 0 — CarGurus AI, LogicBalls, ChatGPT, 25% of buyers use AI tools | 4 |
+| Small claims court guide | GAP: 0 — DoNotPay, LawConnect (free), state-specific AI guides | 3 |
+| Government benefits eligibility checker | GAP: 0 — BenefitsCheckUp (2,500+ programs), BenefitKarma AI, USA.gov | 4 |
+| Unclaimed money/property finder | GAP: 0 — Unclaimed.org, MissingMoney.com, state sites all free | 4 |
+| Warranty expiration tracker | GAP: 0 — TrackWarranty, SlipCrate, Warrify, Warracker all free | 3 |
+| Moving/relocation cost estimator | GAP: 0 — 3 Men Movers, North American, HireAHelper, Freightwaves | 4 |
+| ADU feasibility checker | GAP: partial — FutureLot (21 states), ADU Pilot, Dwellito exist | 4 |
+| DOGE personal impact checker | GAP: partial — CLASP tracker, CAP tool, but ephemeral/political | 4 |
+| Veteran benefits navigator | GAP: 0 — VA Wayfinder, VeteranAi, VA Benefits Navigator, ChatGPT Plus for vets | 3 |
+| Home inspection report analyzer | GAP: 0 — Ask Aunt Sally AI (free), HomeInsight AI | 3 |
+| Medical bill negotiation advisor | GAP: 0 — Counterforce Health (free, 70%), FightHealthInsurance.com | 4 |
+| Lemon law advisor | TAM: 0 — only 150K-176K vehicles/year qualify | 0 |
+| Credit report error dispute | GAP: 0 — Kikoff AI (free), SmartDispute.ai, Dispute AI Pro | 4 |
+| Business startup requirements by city | GAP: partial but TAM: 3 only (5M new businesses/year) | 3 |
+| Home renovation permit checker | GAP: partial but TAM: 3 only (10M renovations/year) | 3 |
+| Lease agreement analyzer | GAP: 0 — LeaseChat (UChicago), LeaseCheck, Galaxy.ai, goHeather | 4 |
+| Traffic ticket contest advisor | GAP: 0 — TicketZap.ai, Traffic Ticket Buddy, TicketFight.ai | 4 |
+| Insurance claim denial appeal | GAP: 0 — Counterforce Health (free), FightHealthInsurance.com | 4 |
+| Startup idea validator | GAP: 0 — IdeaProof.io, ValidatorAI, FounderPal, RebeccAi all free | 3 |
+| ToS/Privacy policy analyzer | GAP: 0 — PolicyPal, Privy AI, Policy Quick, iWeaver, 5+ free | 5 |
+| Subscription value analyzer | GAP: partial — trackers exist (Rocket Money) but value analysis is subjective | 4 |
+| Neighbor noise complaint advisor | Too niche, mainly legal advice articles | 2 |
+| Elder care facility comparison | GAP: partial — Contour Care free AI search + A Place for Mom | 3 |

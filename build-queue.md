@@ -1,7 +1,7 @@
 ## Build Queue (sorted by composite = venture x TAM)
 
-**Threshold: 18** (job-scam-detector: venture 6 x TAM 3)
-Only build if projected composite (6 x TAM) >= 18. Currently requires **TAM 3**.
+**Threshold: 24** (wage-rights-advisor: venture 6 x TAM 4)
+Only build if projected composite (6 x TAM) >= 24. Currently requires **TAM 4**.
 
 ### Built
 1. ~~**job-scam-detector** — 6/6 — TAM 3 — Composite 18 — SHIPPED~~
@@ -19,5 +19,7 @@ Only build if projected composite (6 x TAM) >= 18. Currently requires **TAM 3**.
 
 12. ~~**property-tax-appeal-advisor** — 6/6 — TAM 3 — Composite 18 — SHIPPED~~
 
+13. ~~**wage-rights-advisor** — 6/6 — TAM 4 — Composite 24 — SHIPPED~~
+
 ### Next Up
-(Empty — need TAM 4+ ideas to beat threshold. Research more.)
+(Empty — need TAM 4+ ideas to match new threshold of 24. Research more.)
