@@ -25,5 +25,7 @@ Only build if projected composite (6 x TAM) >= 24. Currently requires **TAM 4**.
 
 15. ~~**consumer-complaint-advisor** — 6/6 — TAM 4 — Composite 24 — SHIPPED~~
 
+16. ~~**flight-rights-advisor** — 6/6 — TAM 4 — Composite 24 — SHIPPED~~
+
 ### Next Up
 (Empty — need TAM 4+ ideas to match threshold of 24. Research more.)

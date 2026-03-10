@@ -143,3 +143,16 @@ Key finding: Consumer complaint/dispute resolution advisory is a genuine gap at 
 | Right to repair advisor | GAP: partial — no dedicated tool but only 7 states with laws; low awareness | 4 |
 | Phishing email detector | GAP: 0 — PhishingInspector (free AI), Keepnet Labs, CheckPhish, EasyDMARC | 5 |
 | Customs import duty calculator | GAP: 0 — Flexport, AMZ Prep, SimplyDuty, TariffDutyCalculator all free | 4 |
+
+### Research Round 5: Revisiting flight rights with new angle
+
+Previously rejected "flight delay compensation" in round 1 because claim services take 25-50% commission and an agent can't file claims directly. Revisited with advisory-only angle: agent analyzes regulations, researches airline record, and generates personalized claim plans — the user files themselves and keeps 100%.
+
+### Finding: Flight Rights Advisor ✅ QUEUED
+- **Source**: US DOT 2024 Final Rule on Automatic Refunds, EU Regulation 261/2004, Canadian APPR, AirHelp annual report, DOT complaint data
+- **Signal**: 900M+ passengers fly in the US annually. 2.2% of flights cancelled, 20%+ delayed. DOT received record complaints in 2024. EU261 eligible passengers leave €5B+ unclaimed annually — only 15% file. AirHelp raised $100M+ proving massive demand. New DOT 2024 rule means automatic refunds are now LAW but airlines still don't comply.
+- **Current solutions**: AirHelp, Flightright, ClaimCompass all take 25-50% commission. Free letter generators (LogicBalls, Easy-Peasy) are generic — no route-based regulation analysis. DOT has complaint form but no guidance tool. No free AI tool combines route-based regulation analysis + disruption classification + airline record research + personalized claim plans with letters.
+- **Agent design**: GATHER (flight details, route, disruption type) → ANALYZE (determine applicable regulations based on airports — US DOT, EU261, APPR; classify disruption; calculate compensation) → RESEARCH (search latest rights + airline complaint record) → GENERATE (comprehensive claim plan with airline letter, DOT complaint filing, EU261 NEB guidance, chargeback steps, escalation timeline)
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (900M+ annual US passengers) | Composite: 24
+- **Status**: queued → building → SHIPPED
+- **Notes**: NOT a claim-filing service — advisory + document generation. The key insight is that the agent analyzes WHICH regulations apply based on the specific route (EU261 only for EU departure/arrival on EU carrier, APPR only for Canadian flights, etc.) which generic letter generators don't do. The regulation analysis tool contains airport mapping, extraordinary circumstances detection, and compensation calculation logic. Different from consumer-complaint-advisor because it's domain-specific with specialized legal knowledge.
