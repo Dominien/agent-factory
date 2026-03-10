@@ -10,15 +10,15 @@ You write `program.md`. The agent does everything else — overnight, unattended
 
 ```mermaid
 flowchart TD
-    A["program.md\n(you write this)"] --> B["Research\nReddit, HN, GitHub, Twitter"]
-    B --> C{"Score\nDEMAND x GAP x TAM"}
+    A["program.md<br/>(you write this)"] --> B["Research<br/>Reddit, HN, GitHub, Twitter"]
+    B --> C{"Score<br/>DEMAND x GAP x TAM"}
     C -- "below threshold" --> B
-    C -- "above threshold" --> D["Build\nfork seed harness\nadd specialized tools"]
-    D --> E{"Validate\nnpm install && npm run dev\ntest prompt → useful output?"}
-    E -- fail --> F["Discard\nlog failure, keep research"]
-    E -- pass --> G["Ship\ncommit to builds/"]
+    C -- "above threshold" --> D["Build<br/>Fork seed harness,<br/>add specialized tools"]
+    D --> E{"Validate<br/>Does it boot and<br/>produce useful output?"}
+    E -- fail --> F["Discard<br/>Log failure, keep research"]
+    E -- pass --> G["Ship<br/>Commit to builds/"]
     F --> B
-    G --> H["Reflect\nupdate results.tsv\nmeta-reflection every 5 builds"]
+    G --> H["Reflect<br/>Update results.tsv,<br/>meta-reflection every 5 builds"]
     H --> B
 ```
 
@@ -67,8 +67,8 @@ Every built agent follows **GATHER → PROCESS → OUTPUT**:
 
 ```mermaid
 flowchart LR
-    A["GATHER\nSearch, fetch,\nread, call APIs"] --> B["PROCESS\nParse, extract,\nscore, compare"]
-    B --> C["OUTPUT\nReport, letter,\nplan, briefing"]
+    A["GATHER<br/>Search, fetch,<br/>read, call APIs"] --> B["PROCESS<br/>Parse, extract,<br/>score, compare"]
+    B --> C["OUTPUT<br/>Report, letter,<br/>plan, briefing"]
 ```
 
 Each tool does one thing well. Use as many as the problem needs — no artificial cap.
