@@ -111,3 +111,35 @@ Key finding: Every consumer-facing "research and report" niche with TAM 4+ has G
 - **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (250M+ Americans with data on brokers) | Composite: 24
 - **Status**: queued → building → SHIPPED
 - **Notes**: NOT a trust-checker — privacy protection + document generation agent. Different from personal data exposure scanner (which FINDS data) because this GENERATES a removal action plan. Existing paid services ($8+/month) prove demand. Agent empowers users to do it themselves for free.
+
+### Research Round 4: Continuing TAM 4+ hunt
+
+Searched 15+ new problem areas: privacy settings optimizer, legal document generators, car accident advisor, new parent benefits, employee benefits optimizer, right to repair advisor, phishing detectors, environmental exposure reports, consumer dispute resolution.
+
+Key finding: Consumer complaint/dispute resolution advisory is a genuine gap at TAM 4. CFPB complaints up 89.1% YoY, 20M+ households with unresolved ISP complaints, USA.gov has only a static directory (not AI-powered personalized guidance). No free tool combines complaint routing + rights research + complaint drafting + company research + escalation strategy.
+
+### Finding: Consumer Complaint Resolution Advisor ✅ QUEUED
+- **Source**: CFPB data (2.7M complaints in 2024, up 89.1% YoY), FTC (5.15M complaints), FairShake research, Consumer Federation of America, USA.gov
+- **Signal**: 2.7M CFPB complaints in 2024 alone (up 89.1% YoY). 5.15M FTC complaints. 20M+ households with unresolved ISP complaints. Consumer litigation filings all up in 2025. CFPB being defunded by DOGE = consumers need self-help tools more than ever. Constant Reddit posts asking "who do I complain to about X?"
+- **Current solutions**: USA.gov has static directory of agencies (not personalized). CFPB/FTC accept complaints but don't advise on strategy. FairShake helps with arbitration but charges a fee. Easy-Peasy/LogicBalls generate complaint letters but don't route or strategize. No free AI tool combines complaint routing + consumer rights research + company complaint history + draft letters + escalation strategy.
+- **Agent design**: GATHER (user's complaint: company, product/service, issue, amount, state) → ANALYZE (classify complaint type, identify relevant agencies, research state-specific consumer rights) → RESEARCH (search company's complaint history on CFPB/BBB) → GENERATE (personalized resolution plan with prioritized agencies, draft complaint letters, escalation timeline, consumer rights summary)
+- **Score**: SIGNAL: 1 | GAP: 1 | FEASIBLE: 1 | TAM: 4 (100M+ consumers with disputes annually) | Composite: 24
+- **Status**: queued → building → SHIPPED
+- **Notes**: NOT a trust-checker — advisory + research + document generation agent. Input is user's complaint (not an entity to verify). Closest architecture to wage-rights-advisor. Gap exists because existing tools are either agency-specific portals (CFPB, FTC), paid services (FairShake), or simple letter generators. Agent fills the middle: free, AI-powered, personalized complaint resolution strategy.
+
+### Rejected Ideas (this round)
+
+| Idea | Reason | TAM |
+|------|--------|-----|
+| Privacy settings optimizer | GAP: partial — Consumer Reports guides, Google/Facebook Privacy Checkup tools exist. Static but adequate. | 5 |
+| Power of attorney / advance directive generator | GAP: 0 — Template.net, FreeWill, Rocket Lawyer, Lawyerz AI, AARP all free | 4 |
+| Identity theft recovery planner | GAP: 0 — IdentityTheft.gov provides free personalized recovery plans (FTC) | 4 |
+| Car accident advisor | GAP: partial — Mighty.com (free AI claims advisor), Gammill Law calculator | 4 |
+| New parent benefits advisor | GAP: partial — PaidLeave.ai covers leave; but broader benefits covered by multiple tools | 3 |
+| Employee benefits optimizer | Not feasible — needs employer-specific plan data the agent can't access | 4 |
+| Rental deposit return advisor | TAM: 3 only (15M movers/year) — below threshold | 3 |
+| Personal cybersecurity audit | GAP: partial — HaveIBeenPwned, Google Password Checkup cover key pieces | 4 |
+| Environmental exposure report | GAP: partial — EPA MyEnvironment, TRI Tracker, How's My Waterway cover it | 4 |
+| Right to repair advisor | GAP: partial — no dedicated tool but only 7 states with laws; low awareness | 4 |
+| Phishing email detector | GAP: 0 — PhishingInspector (free AI), Keepnet Labs, CheckPhish, EasyDMARC | 5 |
+| Customs import duty calculator | GAP: 0 — Flexport, AMZ Prep, SimplyDuty, TariffDutyCalculator all free | 4 |
